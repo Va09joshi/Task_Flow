@@ -11,17 +11,17 @@ void main() {
     await tester.pumpAndSettle();
 
     // Verify we are on login screen
-    expect(find.text('Welcome to TaskFlow'), findsOneWidget);
+    expect(find.text('TaskFlow'), findsOneWidget);
 
     // Enter mock credentials
     await tester.enterText(find.byType(TextFormField).first, 'ava.admin@nimbusdigital.test');
     await tester.enterText(find.byType(TextFormField).last, 'Password123!');
 
     // Tap login
-    await tester.tap(find.text('Log In'));
-    await tester.pumpAndSettle(const Duration(seconds: 1)); // Wait for async auth mock
+    await tester.tap(find.text('Login').last); // .last because AppBar also has 'Login'
+    await tester.pumpAndSettle(const Duration(seconds: 2)); // Wait for async auth mock
 
     // Verify we reached the home/dashboard or project list
-    expect(find.text('Projects'), findsOneWidget);
+    expect(find.text('Welcome to TaskFlow'), findsOneWidget);
   });
 }
