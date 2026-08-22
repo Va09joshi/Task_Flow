@@ -15,7 +15,8 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<List<User>> getOrgMembers(String orgId) async {
-    return dataSource.getOrgMembers(orgId);
+    final response = await dataSource.getOrgMembers(orgId);
+    return response.users;
   }
 
   @override

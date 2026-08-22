@@ -3,11 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:taskflow/presentation/auth/auth_notifier.dart';
 import 'package:taskflow/core/providers.dart';
-import 'package:taskflow/core/providers.dart';
-import 'package:taskflow/core/providers.dart';
-import 'package:taskflow/core/providers.dart';
-import 'package:taskflow/core/providers.dart';
 
+import 'package:local_auth/local_auth.dart';
 import '../auth_state.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -19,6 +16,7 @@ class SplashScreen extends ConsumerStatefulWidget {
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
   String? _errorMsg;
+  bool _biometricPrompted = false;
 
   @override
   void initState() {
@@ -50,12 +48,33 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authNotifierProvider);
     
-    void handleNavigation(AuthState state) {
+    void handleNavigation(AuthState state) async {
       if (!mounted) return;
       switch (state) {
         case AuthStateAuthenticated():
-          debugPrint('SplashScreen: Navigating to /home');
-          context.go('/home');
+          if (_biometricPrompted) return;
+          _biometricPrompted = true;
+          final LocalAuthentication auth = LocalAuthentication();
+          try {
+            final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
+            final bool canAuthenticate = canAuthenticateWithBiometrics || await auth.isDeviceSupported();
+            if (canAuthenticate) {
+              final bool didAuthenticate = await auth.authenticate(
+                localizedReason: 'Please authenticate to access TaskFlow',
+              );
+              if (didAuthenticate) {
+                if (mounted) context.go('/home');
+              } else {
+                ref.read(authNotifierProvider.notifier).logout();
+              }
+            } else {
+              if (mounted) context.go('/home');
+            }
+          } catch (e, st) {
+            debugPrint('Biometrics Error: $e\n$st');
+            // Biometrics error or missing permissions on emulator
+            if (mounted) context.go('/home');
+          }
           break;
         case AuthStateUnauthenticated():
         case AuthStateError():

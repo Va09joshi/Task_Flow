@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   final String labelText;
   final TextEditingController? controller;
   final TextInputType keyboardType;
@@ -19,17 +19,39 @@ class CustomTextField extends StatelessWidget {
   });
 
   @override
+  State<CustomTextField> createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  late bool _isObscured;
+
+  @override
+  void initState() {
+    super.initState();
+    _isObscured = widget.obscureText;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
+      controller: widget.controller,
       decoration: InputDecoration(
-        labelText: labelText,
-        // The theme (InputDecorationTheme) handles the borders, colors, and paddings.
+        labelText: widget.labelText,
+        suffixIcon: widget.obscureText
+            ? IconButton(
+                icon: Icon(_isObscured ? Icons.visibility_off : Icons.visibility),
+                onPressed: () {
+                  setState(() {
+                    _isObscured = !_isObscured;
+                  });
+                },
+              )
+            : null,
       ),
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      maxLines: maxLines,
-      validator: validator,
+      keyboardType: widget.keyboardType,
+      obscureText: _isObscured,
+      maxLines: widget.maxLines,
+      validator: widget.validator,
     );
   }
 }

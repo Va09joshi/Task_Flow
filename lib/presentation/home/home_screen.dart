@@ -16,10 +16,15 @@ class HomeScreen extends ConsumerWidget {
         title: 'Home',
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.notifications_none),
             onPressed: () {
-              ref.read(authNotifierProvider.notifier).logout();
-              if (context.mounted) context.go('/login');
+              context.push('/notifications');
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.person_outline),
+            onPressed: () {
+              context.push('/profile');
             },
           )
         ],

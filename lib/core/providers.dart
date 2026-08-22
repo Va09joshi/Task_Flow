@@ -4,6 +4,8 @@ import 'package:taskflow/data/datasources/mock_data_source.dart';
 import 'package:taskflow/data/repositories/auth_repository_impl.dart';
 import 'package:taskflow/data/repositories/project_repository_impl.dart';
 import 'package:taskflow/data/repositories/task_repository_impl.dart';
+import 'package:taskflow/domain/repositories/notification_repository.dart';
+import 'package:taskflow/data/repositories/notification_repository_impl.dart';
 import 'package:taskflow/data/repositories/user_repository_impl.dart';
 import 'package:taskflow/domain/repositories/auth_repository.dart';
 import 'package:taskflow/domain/repositories/project_repository.dart';
@@ -45,4 +47,9 @@ final taskRepositoryProvider = Provider<TaskRepository>((ref) {
 final userRepositoryProvider = Provider<UserRepository>((ref) {
   final dataSource = ref.watch(mockDataSourceProvider);
   return UserRepositoryImpl(dataSource);
+});
+
+final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
+  final dataSource = ref.watch(mockDataSourceProvider);
+  return NotificationRepositoryImpl(dataSource);
 });

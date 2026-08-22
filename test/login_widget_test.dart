@@ -4,10 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskflow/presentation/auth/login/login_screen.dart';
 import 'package:taskflow/core/providers.dart';
-import 'package:taskflow/core/providers.dart';
-import 'package:taskflow/core/providers.dart';
-import 'package:taskflow/core/providers.dart';
-import 'package:taskflow/core/providers.dart';
 
 void main() {
   testWidgets('LoginScreen validation errors when empty', (WidgetTester tester) async {
@@ -26,13 +22,14 @@ void main() {
     );
 
     // Find the login button and tap it
-    final loginButton = find.text('Log In');
+    final loginButton = find.text('Login');
     expect(loginButton, findsOneWidget);
 
     await tester.tap(loginButton);
-    await tester.pumpAndSettle(); // Wait for validation and SnackBar
+    await tester.pump(const Duration(milliseconds: 500)); // Wait for error text animation
 
-    // Expect to see the "Please fill in all fields" toast (since validation fails)
-    expect(find.text('Please fill in all fields'), findsOneWidget);
+    // Expect to see validation errors
+    expect(find.text('Email is required'), findsOneWidget);
+    expect(find.text('Password is required'), findsOneWidget);
   });
 }

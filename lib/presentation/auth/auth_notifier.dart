@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:taskflow/core/providers.dart';
-import 'package:taskflow/core/providers.dart';
-import 'package:taskflow/core/providers.dart';
-import 'package:taskflow/core/providers.dart';
-import 'package:taskflow/core/providers.dart';
 import 'package:taskflow/domain/repositories/auth_repository.dart';
 import 'package:taskflow/domain/repositories/user_repository.dart';
 import 'package:taskflow/presentation/auth/auth_state.dart';
 import 'package:taskflow/data/models/user_model.dart';
+
+
 class AuthNotifier extends StateNotifier<AuthState> {
   final AuthRepository _authRepository;
   final UserRepository _userRepository;

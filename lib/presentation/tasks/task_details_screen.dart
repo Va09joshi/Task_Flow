@@ -4,6 +4,7 @@ import 'package:taskflow/presentation/tasks/task_providers.dart';
 import 'package:taskflow/presentation/widgets/custom_button.dart';
 import 'package:taskflow/presentation/widgets/custom_app_bar.dart';
 import 'package:taskflow/presentation/tasks/task_form_dialog.dart';
+import 'package:taskflow/presentation/widgets/detail_shimmer.dart';
 
 import '../widgets/custom_card.dart';
 
@@ -81,8 +82,24 @@ class TaskDetailsScreen extends ConsumerWidget {
                       isFullWidth: false,
                       backgroundColor: Colors.redAccent,
                       onPressed: () {
-                        ref.read(taskNotifierProvider.notifier).deleteTask(taskId);
-                        Navigator.pop(context);
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            title: const Text('Delete Task'),
+                            content: const Text('Are you sure you want to delete this task?'),
+                            actions: [
+                              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(ctx); // Close dialog
+                                  ref.read(taskNotifierProvider.notifier).deleteTask(taskId);
+                                  Navigator.pop(context); // Go back to list
+                                },
+                                child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                              ),
+                            ],
+                          ),
+                        );
                       },
                     ),
                   ],
@@ -91,7 +108,7 @@ class TaskDetailsScreen extends ConsumerWidget {
             ),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const DetailShimmer(),
         error: (e, _) => Center(child: Text('Error: $e')),
       ),
     );
@@ -150,3 +167,4 @@ class TaskDetailsScreen extends ConsumerWidget {
     );
   }
 }
+

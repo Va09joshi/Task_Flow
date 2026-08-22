@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskflow/data/datasources/mock_data_source.dart';
 import 'package:taskflow/data/models/task_model.dart';
+import 'package:taskflow/data/models/request/create_task_request.dart';
+import 'package:taskflow/data/models/request/update_task_request.dart';
 import 'package:taskflow/domain/repositories/task_repository.dart';
 
 class TaskRepositoryImpl implements TaskRepository {
@@ -13,11 +15,12 @@ class TaskRepositoryImpl implements TaskRepository {
   @override
   Future<List<Task>> getTasks(String orgId, {String? projectId}) async {
     try {
-      final tasks = await dataSource.getTasks(orgId, projectId: projectId);
-      final jsonList = tasks.map((t) => t.toJson()).toList();
+      final response = await dataSource.getTasks(orgId, projectId: projectId);
+      // Cache the response for offline fallback
+      final jsonList = response.tasks.map((t) => t.toJson()).toList();
       final key = 'cached_tasks_${orgId}_${projectId ?? "all"}';
       await sharedPrefs.setString(key, jsonEncode(jsonList));
-      return tasks;
+      return response.tasks;
     } catch (e) {
       final key = 'cached_tasks_${orgId}_${projectId ?? "all"}';
       final cachedStr = sharedPrefs.getString(key);
@@ -36,12 +39,30 @@ class TaskRepositoryImpl implements TaskRepository {
 
   @override
   Future<void> createTask(Task task) async {
-    return dataSource.createTask(task);
+    final request = CreateTaskRequest(
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      priority: task.priority,
+      projectId: task.projectId,
+      assigneeId: task.assigneeId,
+      dueDate: task.dueDate,
+    );
+    await dataSource.createTask(request);
   }
 
   @override
   Future<void> updateTask(Task task) async {
-    return dataSource.updateTask(task);
+    final request = UpdateTaskRequest(
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      priority: task.priority,
+      assigneeId: task.assigneeId,
+      dueDate: task.dueDate,
+    );
+    await dataSource.updateTask(request);
   }
 
   @override

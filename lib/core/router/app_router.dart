@@ -4,7 +4,8 @@ import 'package:taskflow/presentation/auth/splash/splash_screen.dart';
 import 'package:taskflow/presentation/auth/login/login_screen.dart';
 import 'package:taskflow/presentation/auth/register/register_screen.dart';
 import 'package:taskflow/presentation/home/home_screen.dart';
-import 'package:taskflow/presentation/debug/debug_settings_screen.dart';
+import 'package:taskflow/presentation/notifications/notifications_screen.dart';
+import 'package:taskflow/presentation/profile/profile_screen.dart';
 import 'package:taskflow/presentation/auth/auth_notifier.dart';
 import 'package:taskflow/presentation/auth/auth_state.dart';
 
@@ -56,6 +57,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/home',
         builder: (context, state) => const HomeScreen(),
       ),
+
       GoRoute(
         path: '/projects',
         builder: (context, state) => const ProjectListScreen(),
@@ -77,6 +79,14 @@ final routerProvider = Provider<GoRouter>((ref) {
           final id = state.pathParameters['id']!;
           return TaskDetailsScreen(taskId: id);
         },
+      ),
+      GoRoute(
+        path: '/notifications',
+        builder: (context, state) => const NotificationsScreen(),
+      ),
+      GoRoute(
+        path: '/profile',
+        builder: (context, state) => const ProfileScreen(),
       ),
     ],
   );

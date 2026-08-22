@@ -24,6 +24,7 @@ class _TaskFormDialogState extends ConsumerState<TaskFormDialog> {
   late TextEditingController _descController;
   String _status = TaskStatus.todo;
   String _priority = TaskPriority.medium;
+  String? _selectedAssigneeId;
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _TaskFormDialogState extends ConsumerState<TaskFormDialog> {
     _descController = TextEditingController(text: widget.taskToEdit?.description ?? '');
     _status = widget.taskToEdit?.status ?? TaskStatus.todo;
     _priority = widget.taskToEdit?.priority ?? TaskPriority.medium;
+    _selectedAssigneeId = widget.taskToEdit?.assigneeId;
   }
 
   @override
@@ -53,6 +55,7 @@ class _TaskFormDialogState extends ConsumerState<TaskFormDialog> {
           description: _descController.text.trim(),
           status: _status,
           priority: _priority,
+          assigneeId: _selectedAssigneeId,
           dueDate: DateTime.now().add(const Duration(days: 7)).toIso8601String().split('T').first,
           createdAt: DateTime.now(),
         );
@@ -63,6 +66,7 @@ class _TaskFormDialogState extends ConsumerState<TaskFormDialog> {
           description: _descController.text.trim(),
           status: _status,
           priority: _priority,
+          assigneeId: _selectedAssigneeId,
         );
         await notifier.updateTask(updatedTask);
       }
@@ -76,6 +80,7 @@ class _TaskFormDialogState extends ConsumerState<TaskFormDialog> {
   @override
   Widget build(BuildContext context) {
     final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
+    final membersAsync = ref.watch(orgMembersProvider);
     
     return Padding(
       padding: EdgeInsets.only(
@@ -120,6 +125,68 @@ class _TaskFormDialogState extends ConsumerState<TaskFormDialog> {
                   DropdownMenuItem(value: TaskStatus.done, child: Text('Done')),
                 ],
                 onChanged: (val) => setState(() => _status = val!),
+              ),
+              const SizedBox(height: 16),
+              membersAsync.when(
+                data: (members) => DropdownButtonFormField<String?>(
+                  decoration: InputDecoration(
+                    labelText: 'Assignee',
+                    filled: true,
+                    prefixIcon: _selectedAssigneeId == null
+                        ? const Icon(Icons.person_outline)
+                        : Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: CircleAvatar(
+                              radius: 12,
+                              backgroundImage: members.firstWhere((m) => m.id == _selectedAssigneeId).avatarUrl.isNotEmpty
+                                  ? NetworkImage(members.firstWhere((m) => m.id == _selectedAssigneeId).avatarUrl)
+                                  : null,
+                              child: members.firstWhere((m) => m.id == _selectedAssigneeId).avatarUrl.isEmpty
+                                  ? const Icon(Icons.person, size: 16)
+                                  : null,
+                            ),
+                          ),
+                  ),
+                  value: _selectedAssigneeId,
+                  items: [
+                    const DropdownMenuItem(
+                      value: null,
+                      child: Text('Unassigned'),
+                    ),
+                    ...members.map((m) => DropdownMenuItem(
+                          value: m.id,
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 12,
+                                backgroundImage: m.avatarUrl.isNotEmpty ? NetworkImage(m.avatarUrl) : null,
+                                child: m.avatarUrl.isEmpty ? const Icon(Icons.person, size: 14) : null,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(m.name),
+                            ],
+                          ),
+                        ))
+                  ],
+                  onChanged: (val) => setState(() => _selectedAssigneeId = val),
+                ),
+                loading: () => TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Assignee',
+                    filled: true,
+                    suffixIcon: Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    ),
+                  ),
+                  enabled: false,
+                  initialValue: 'Loading members...',
+                ),
+                error: (e, st) => const Text('Error loading members', style: TextStyle(color: Colors.red)),
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:taskflow/data/models/task_model.dart';
+import 'package:taskflow/data/models/project_model.dart';
+import 'package:taskflow/data/models/user_model.dart';
 import 'package:taskflow/presentation/tasks/task_providers.dart';
+import 'package:taskflow/presentation/projects/project_providers.dart';
 import 'package:taskflow/presentation/widgets/custom_text_field.dart';
 import 'package:taskflow/presentation/widgets/custom_button.dart';
 import 'package:taskflow/presentation/widgets/custom_app_bar.dart';
@@ -76,9 +79,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // In a real app we'd use providers to fetch org members and projects for dropdowns
-    // Here we'll just mock it or assume it's passed. I will use the userRepositoryProvider 
-    // to get members. We need a provider for members.
+    final projectsAsync = ref.watch(projectsProvider);
+    final membersAsync = ref.watch(orgMembersProvider);
     
     return Scaffold(
       appBar: CustomAppBar(title: widget.task == null ? 'Create Task' : 'Edit Task'),
@@ -99,6 +101,46 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
                 controller: _descController,
                 labelText: 'Description',
                 maxLines: 3,
+              ),
+              const SizedBox(height: 16),
+              projectsAsync.when(
+                data: (projects) => DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(labelText: 'Project'),
+                  value: _selectedProjectId,
+                  items: projects.map((p) => DropdownMenuItem(value: p.id, child: Text(p.name))).toList(),
+                  onChanged: (val) => setState(() => _selectedProjectId = val),
+                  validator: (val) => val == null ? 'Required' : null,
+                ),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (e, st) => const Text('Error loading projects'),
+              ),
+              const SizedBox(height: 16),
+              membersAsync.when(
+                data: (members) => DropdownButtonFormField<String?>(
+                  decoration: const InputDecoration(labelText: 'Assignee'),
+                  value: _selectedAssigneeId,
+                  items: [
+                    const DropdownMenuItem(value: null, child: Text('Unassigned')),
+                    ...members.map((m) => DropdownMenuItem(value: m.id, child: Text(m.name)))
+                  ],
+                  onChanged: (val) => setState(() => _selectedAssigneeId = val),
+                ),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (e, st) => const Text('Error loading members'),
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(labelText: 'Status'),
+                value: _status,
+                items: ['todo', 'in_progress', 'done'].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+                onChanged: (val) => setState(() => _status = val!),
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(labelText: 'Priority'),
+                value: _priority,
+                items: ['low', 'medium', 'high'].map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
+                onChanged: (val) => setState(() => _priority = val!),
               ),
               const SizedBox(height: 32),
               CustomButton(

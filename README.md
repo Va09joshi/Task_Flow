@@ -57,11 +57,13 @@ To test the application, use the following mocked credentials defined in `assets
 ## Simulated Errors & Offline State
 To evaluate how the app handles network failures and edge cases, a hidden **Debug Settings** screen has been provided. 
 1. Log in to the application.
-2. Tap the **Bug Icon** located in the top right corner of the `CustomAppBar`.
-3. Toggle the following simulations:
+2. Tap your **Profile Icon** in the top right corner of the Home screen.
+3. Tap the **Debug Settings** button.
+4. Toggle the following simulations:
    - **Offline Mode**: Simulates loss of connectivity (`NoInternetException`).
-   - **Simulate 404**: Forces lookup operations to fail gracefully.
+   - **Simulate 404**: Forces lookup operations to fail gracefully (e.g. Task Not Found).
    - **Simulate Timeout**: Forces long-running network operations to timeout.
+   - **Simulate Validation Error**: Forces a mock API validation error on login.
 
 ## Testing
 The project includes Unit, Widget, and Integration tests. Run the test suite via:

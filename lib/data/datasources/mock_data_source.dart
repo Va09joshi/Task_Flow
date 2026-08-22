@@ -8,6 +8,19 @@ import 'package:taskflow/data/models/task_model.dart';
 import 'package:taskflow/data/models/comment_model.dart';
 import 'package:taskflow/data/models/notification_model.dart';
 import 'package:taskflow/data/models/auth_model.dart';
+import 'package:taskflow/data/models/request/login_request.dart';
+import 'package:taskflow/data/models/request/refresh_token_request.dart';
+import 'package:taskflow/data/models/request/create_project_request.dart';
+import 'package:taskflow/data/models/request/update_project_request.dart';
+import 'package:taskflow/data/models/request/create_task_request.dart';
+import 'package:taskflow/data/models/request/update_task_request.dart';
+import 'package:taskflow/data/models/request/create_comment_request.dart';
+import 'package:taskflow/data/models/response/login_response.dart';
+import 'package:taskflow/data/models/response/refresh_token_response.dart';
+import 'package:taskflow/data/models/response/project_list_response.dart';
+import 'package:taskflow/data/models/response/task_list_response.dart';
+import 'package:taskflow/data/models/response/notification_list_response.dart';
+import 'package:taskflow/data/models/response/user_list_response.dart';
 
 class MockDataSource {
   static const _assetPath = 'assets/mock_data/TaskFlow-MockData.json';
@@ -24,7 +37,7 @@ class MockDataSource {
   List<Notification> notifications = [];
   AuthMockData? authMock;
 
-  // Debug settings
+  // Debug simulation flags
   bool simulate404 = false;
   bool simulateTimeout = false;
   bool simulateValidationError = false;
@@ -48,12 +61,15 @@ class MockDataSource {
     _initialized = true;
   }
 
+  // ---------------------------------------------------------------------------
+  // Network simulation
+  // ---------------------------------------------------------------------------
   Future<void> _simulateNetwork() async {
     if (offlineMode) {
       throw Exception('Network is offline');
     }
     
-    // Simulate delay
+    // Simulate realistic network latency
     await Future.delayed(const Duration(milliseconds: 500));
     
     if (simulateTimeout) {
@@ -61,25 +77,58 @@ class MockDataSource {
     }
   }
 
+  // ---------------------------------------------------------------------------
   // Auth
-  Future<AuthResponse> login(String email, String password) async {
+  // ---------------------------------------------------------------------------
+  Future<LoginResponse> login(LoginRequest request) async {
     await _simulateNetwork();
     
     if (simulateValidationError) {
-      throw Exception('Validation error: Invalid format');
+      throw Exception('Validation Error: Invalid request format');
     }
     
-    if (!authMock!.testCredentials.any((c) => c.email == email && c.password == password)) {
-      throw Exception('Invalid credentials');
+    // Match against test_credentials from auth_mock
+    for (final cred in authMock!.testCredentials) {
+      if (cred.email == request.email && cred.password == request.password) {
+        final user = users.firstWhere((u) => u.email == cred.email);
+        return LoginResponse(
+          accessToken: authMock!.mockLoginResponse.accessToken,
+          refreshToken: authMock!.mockLoginResponse.refreshToken,
+          accessTokenExpiresInSeconds: authMock!.mockLoginResponse.accessTokenExpiresInSeconds,
+          refreshTokenExpiresInSeconds: authMock!.mockLoginResponse.refreshTokenExpiresInSeconds,
+          user: user,
+          orgId: cred.orgId,
+          role: cred.role,
+        );
+      }
     }
-    
-    return authMock!.mockLoginResponse;
+    throw Exception('Invalid credentials');
   }
 
-  // Projects
-  Future<List<Project>> getProjects(String orgId) async {
+  Future<RefreshTokenResponse> refreshToken(RefreshTokenRequest request) async {
     await _simulateNetwork();
-    return projects.where((p) => p.orgId == orgId).toList();
+    
+    // Simulate: if the provided refresh token matches, issue a new access token
+    if (request.refreshToken == authMock!.mockLoginResponse.refreshToken) {
+      return RefreshTokenResponse(
+        accessToken: 'mock.access.token.refreshed.${DateTime.now().millisecondsSinceEpoch}',
+        refreshToken: authMock!.mockLoginResponse.refreshToken,
+        accessTokenExpiresInSeconds: authMock!.mockLoginResponse.accessTokenExpiresInSeconds,
+      );
+    }
+    throw Exception('Invalid refresh token');
+  }
+
+  // ---------------------------------------------------------------------------
+  // Projects
+  // ---------------------------------------------------------------------------
+  Future<ProjectListResponse> getProjects(String orgId) async {
+    await _simulateNetwork();
+    final orgProjects = projects.where((p) => p.orgId == orgId).toList();
+    return ProjectListResponse(
+      projects: orgProjects,
+      totalCount: orgProjects.length,
+    );
   }
 
   Future<Project> getProject(String id) async {
@@ -89,33 +138,60 @@ class MockDataSource {
     return p;
   }
 
-  Future<void> createProject(Project project) async {
+  Future<Project> createProject(CreateProjectRequest request) async {
     await _simulateNetwork();
-    projects.add(project);
+    if (simulateValidationError && request.name.isEmpty) {
+      throw Exception('Validation Error: Project name is required');
+    }
+    final newProject = Project(
+      id: 'proj_${projects.length + 100}',
+      orgId: request.orgId,
+      name: request.name,
+      description: request.description,
+      taskCount: 0,
+      status: request.status,
+      createdAt: DateTime.now(),
+    );
+    projects.add(newProject);
+    return newProject;
   }
 
-  Future<void> updateProject(Project project) async {
+  Future<Project> updateProject(UpdateProjectRequest request) async {
     await _simulateNetwork();
-    final index = projects.indexWhere((p) => p.id == project.id);
-    if (index == -1) throw Exception('Not found');
-    projects[index] = project;
+    final index = projects.indexWhere((p) => p.id == request.id);
+    if (index == -1 || simulate404) throw Exception('Project not found');
+    
+    final existing = projects[index];
+    projects[index] = existing.copyWith(
+      name: request.name ?? existing.name,
+      description: request.description ?? existing.description,
+      status: request.status ?? existing.status,
+    );
+    return projects[index];
   }
 
   Future<void> deleteProject(String id) async {
     await _simulateNetwork();
+    if (simulate404 && !projects.any((p) => p.id == id)) {
+      throw Exception('Project not found');
+    }
     projects.removeWhere((p) => p.id == id);
   }
 
+  // ---------------------------------------------------------------------------
   // Tasks
-  Future<List<Task>> getTasks(String orgId, {String? projectId}) async {
+  // ---------------------------------------------------------------------------
+  Future<TaskListResponse> getTasks(String orgId, {String? projectId}) async {
     await _simulateNetwork();
-    // In our mock logic, we might need to filter tasks by project, 
-    // but also we need to ensure they belong to projects in the org.
     final orgProjects = projects.where((p) => p.orgId == orgId).map((p) => p.id).toSet();
-    return tasks.where((t) {
+    final filteredTasks = tasks.where((t) {
       if (projectId != null && t.projectId != projectId) return false;
       return orgProjects.contains(t.projectId);
     }).toList();
+    return TaskListResponse(
+      tasks: filteredTasks,
+      totalCount: filteredTasks.length,
+    );
   }
 
   Future<Task> getTask(String id) async {
@@ -125,32 +201,107 @@ class MockDataSource {
     return t;
   }
 
-  Future<void> createTask(Task task) async {
+  Future<Task> createTask(CreateTaskRequest request) async {
     await _simulateNetwork();
-    tasks.add(task);
+    if (simulateValidationError && request.title.isEmpty) {
+      throw Exception('Validation Error: Task title is required');
+    }
+    final newTask = Task(
+      id: 'task_${tasks.length + 1000}',
+      title: request.title,
+      description: request.description,
+      status: request.status,
+      priority: request.priority,
+      projectId: request.projectId,
+      assigneeId: request.assigneeId,
+      dueDate: request.dueDate ?? DateTime.now().toIso8601String(),
+      createdAt: DateTime.now(),
+    );
+    tasks.insert(0, newTask);
+    return newTask;
   }
 
-  Future<void> updateTask(Task task) async {
+  Future<Task> updateTask(UpdateTaskRequest request) async {
     await _simulateNetwork();
-    final index = tasks.indexWhere((t) => t.id == task.id);
-    if (index == -1) throw Exception('Not found');
-    tasks[index] = task;
+    final index = tasks.indexWhere((t) => t.id == request.id);
+    if (index == -1 || simulate404) throw Exception('Task not found');
+    
+    final existing = tasks[index];
+    tasks[index] = existing.copyWith(
+      title: request.title ?? existing.title,
+      description: request.description ?? existing.description,
+      status: request.status ?? existing.status,
+      priority: request.priority ?? existing.priority,
+      assigneeId: request.assigneeId ?? existing.assigneeId,
+      dueDate: request.dueDate ?? existing.dueDate,
+    );
+    return tasks[index];
   }
 
   Future<void> deleteTask(String id) async {
     await _simulateNetwork();
+    if (simulate404 && !tasks.any((t) => t.id == id)) {
+      throw Exception('Task not found');
+    }
     tasks.removeWhere((t) => t.id == id);
   }
 
+  // ---------------------------------------------------------------------------
+  // Comments
+  // ---------------------------------------------------------------------------
+  Future<List<Comment>> getComments(String taskId) async {
+    await _simulateNetwork();
+    return comments.where((c) => c.taskId == taskId).toList();
+  }
+
+  Future<Comment> createComment(CreateCommentRequest request) async {
+    await _simulateNetwork();
+    final newComment = Comment(
+      id: 'comment_${comments.length + 500}',
+      taskId: request.taskId,
+      authorId: request.authorId,
+      body: request.body,
+      createdAt: DateTime.now(),
+    );
+    comments.add(newComment);
+    return newComment;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Notifications
+  // ---------------------------------------------------------------------------
+  Future<NotificationListResponse> getNotifications(String userId) async {
+    await _simulateNetwork();
+    final userNotifications = notifications.where((n) => n.userId == userId).toList();
+    return NotificationListResponse(
+      notifications: userNotifications,
+      unreadCount: userNotifications.where((n) => !n.read).length,
+    );
+  }
+
+  Future<void> markNotificationRead(String id) async {
+    await _simulateNetwork();
+    final index = notifications.indexWhere((n) => n.id == id);
+    if (index != -1) {
+      notifications[index] = notifications[index].copyWith(read: true);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
   // Users & Members
+  // ---------------------------------------------------------------------------
   Future<User?> getUser(String id) async {
     return users.where((u) => u.id == id).firstOrNull;
   }
 
-  Future<List<User>> getOrgMembers(String orgId) async {
+  Future<UserListResponse> getOrgMembers(String orgId) async {
     await _simulateNetwork();
     final memberIds = orgMembers.where((m) => m.orgId == orgId).map((m) => m.userId).toSet();
-    return users.where((u) => memberIds.contains(u.id)).toList();
+    final orgUsers = users.where((u) => memberIds.contains(u.id)).toList();
+    return UserListResponse(
+      users: orgUsers,
+      totalCount: orgUsers.length,
+    );
   }
 
   Future<OrgMember?> getOrgMember(String orgId, String userId) async {

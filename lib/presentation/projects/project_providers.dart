@@ -1,9 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:taskflow/core/providers.dart';
-import 'package:taskflow/core/providers.dart';
-import 'package:taskflow/core/providers.dart';
-import 'package:taskflow/core/providers.dart';
-import 'package:taskflow/core/providers.dart';
 import 'package:taskflow/data/models/project_model.dart';
 import 'package:taskflow/presentation/auth/auth_notifier.dart';
 

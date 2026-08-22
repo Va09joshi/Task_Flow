@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   // Central Constants
-  static const Color primaryColor = Color(0xFF0F172A); // Slate 900
-  static const Color primaryAccent = Color(0xFF1E293B); // Midnight Charcoal
+  static const Color primaryColor = Color(0xFF10B981); // Emerald Green 500
+  static const Color primaryAccent = Color(0xFF059669); // Emerald Green 600
   static const Color backgroundLight = Color(0xFFF8FAFC); // Slate 50
-  static const Color backgroundDark = Color(0xFF020617); // Slate 950
+  static const Color backgroundDark = Color(0xFF121212); // Deep dark charcoal
   static const Color surfaceLight = Colors.white;
-  static const Color surfaceDark = Color(0xFF0F172A); // Slate 900
+  static const Color surfaceDark = Color(0xFF1E1E1E); // Charcoal surface
   static const Color textLight = Color(0xFF0F172A); // Slate 900
-  static const Color textDark = Color(0xFFF8FAFC); // Slate 50
+  static const Color textDark = Color(0xFFE0E0E0); // Off-white
   static const Color borderLight = Color(0xFFE2E8F0); // Slate 200
-  static const Color borderDark = Color(0xFF334155); // Slate 700
+  static const Color borderDark = Color(0xFF333333); // Dark charcoal border
   
   static const double borderRadius = 12.0;
 
@@ -118,7 +118,7 @@ class AppTheme {
           borderRadius: BorderRadius.circular(borderRadius),
           borderSide: const BorderSide(color: Colors.redAccent, width: 2),
         ),
-        labelStyle: const TextStyle(color: Color(0xFF94A3B8)), // Slate 400
+        labelStyle: const TextStyle(color: Color(0xFFAAAAAA)), // Lighter grey
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(

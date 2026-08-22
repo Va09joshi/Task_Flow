@@ -3,6 +3,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:taskflow/data/datasources/mock_data_source.dart';
 import 'package:taskflow/data/models/auth_model.dart';
 import 'package:taskflow/data/models/user_model.dart';
+import 'package:taskflow/data/models/request/login_request.dart';
+import 'package:taskflow/data/models/request/refresh_token_request.dart';
 import 'package:taskflow/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -17,11 +19,17 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<(AuthResponse, User, String role, String orgId)> login(String email, String password) async {
-    final response = await dataSource.login(email, password);
-    final user = dataSource.users.firstWhere((u) => u.email == email, orElse: () => throw Exception('User not found'));
-    final creds = dataSource.authMock!.testCredentials.firstWhere((c) => c.email == email);
+    final request = LoginRequest(email: email, password: password);
+    final response = await dataSource.login(request);
     
-    return (response, user, creds.role, creds.orgId);
+    final authResponse = AuthResponse(
+      accessToken: response.accessToken,
+      refreshToken: response.refreshToken,
+      accessTokenExpiresInSeconds: response.accessTokenExpiresInSeconds,
+      refreshTokenExpiresInSeconds: response.refreshTokenExpiresInSeconds,
+    );
+    
+    return (authResponse, response.user, response.role, response.orgId);
   }
 
   @override
