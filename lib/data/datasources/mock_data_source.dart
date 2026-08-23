@@ -153,7 +153,7 @@ class MockDataSource {
 
     // Add to test credentials so they can login
     authMock!.testCredentials.add(
-      TestCredential(
+      AuthCredentials(
         email: email,
         password: password,
         role: 'member',
@@ -163,13 +163,7 @@ class MockDataSource {
 
     // Add them as an org member to org_1
     orgMembers.add(
-      OrgMember(
-        id: 'org_member_${orgMembers.length + 100}',
-        orgId: 'org_1',
-        userId: newUser.id,
-        role: 'member',
-        joinedAt: DateTime.now(),
-      ),
+      OrgMember(orgId: 'org_1', userId: newUser.id, role: 'member'),
     );
   }
 
