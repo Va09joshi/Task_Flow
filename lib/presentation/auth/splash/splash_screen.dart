@@ -6,6 +6,7 @@ import 'package:taskflow/core/providers.dart';
 
 import 'package:local_auth/local_auth.dart';
 import '../auth_state.dart';
+import 'package:taskflow/core/utils/toast_service.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -84,6 +85,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             if (canAuthenticate) {
               final bool didAuthenticate = await auth.authenticate(
                 localizedReason: 'Please authenticate to access TaskFlow',
+                options: const AuthenticationOptions(
+                  useErrorDialogs: true,
+                  stickyAuth: true,
+                  biometricOnly: false,
+                ),
               );
               if (didAuthenticate) {
                 if (mounted) context.go('/home');
@@ -95,8 +101,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             }
           } catch (e, st) {
             debugPrint('Biometrics Error: $e\n$st');
-            // Biometrics error or missing permissions on emulator
-            if (mounted) context.go('/home');
+            if (mounted) {
+              ToastService.showError(
+                context,
+                'Biometrics unavailable or canceled.',
+              );
+              context.go('/home');
+            }
           }
           break;
         case AuthStateUnauthenticated():
