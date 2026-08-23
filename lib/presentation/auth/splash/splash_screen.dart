@@ -85,8 +85,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             if (canAuthenticate) {
               final bool didAuthenticate = await auth.authenticate(
                 localizedReason: 'Please authenticate to access TaskFlow',
-                useErrorDialogs: true,
-                stickyAuth: true,
+                persistAcrossBackgrounding: true,
                 biometricOnly: false,
               );
               if (didAuthenticate) {
