@@ -121,16 +121,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     return Scaffold(
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF450C3F),
-              Color(0xFF2A0726), // Darker shade for gradient depth
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+        color: Colors.white,
         child: Center(
           child: _errorMsg != null
               ? Padding(
@@ -155,19 +146,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                           padding: const EdgeInsets.all(24),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.white.withOpacity(0.1),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.3),
-                                blurRadius: 30,
-                                offset: const Offset(0, 15),
-                              ),
-                            ],
+                            color: const Color(0xFF450C3F).withOpacity(0.1),
                           ),
                           child: const Icon(
                             Icons.check_circle_outline,
                             size: 80,
-                            color: Colors.white,
+                            color: Color(0xFF450C3F),
                           ),
                         ),
                         const SizedBox(height: 32),
@@ -176,23 +160,23 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                           style: TextStyle(
                             fontSize: 42,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: Color(0xFF450C3F),
                             letterSpacing: 2.0,
                           ),
                         ),
                         const SizedBox(height: 12),
-                        Text(
+                        const Text(
                           'Manage your work seamlessly',
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.black54,
                             letterSpacing: 1.2,
                           ),
                         ),
                         const SizedBox(height: 64),
                         const CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.white,
+                            Color(0xFF450C3F),
                           ),
                           strokeWidth: 3,
                         ),
