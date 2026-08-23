@@ -14,14 +14,35 @@ class SplashScreen extends ConsumerStatefulWidget {
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends ConsumerState<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen>
+    with SingleTickerProviderStateMixin {
   String? _errorMsg;
   bool _biometricPrompted = false;
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
+    );
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack),
+    );
+    _animationController.forward();
     _initApp();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   Future<void> _initApp() async {
@@ -98,16 +119,88 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     });
 
     return Scaffold(
-      body: Center(
-        child: _errorMsg != null
-            ? Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Error: $_errorMsg\n\nPlease restart the app.',
-                  style: const TextStyle(color: Colors.red),
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF450C3F),
+              Color(0xFF2A0726), // Darker shade for gradient depth
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(
+          child: _errorMsg != null
+              ? Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Text(
+                    'Error: $_errorMsg\n\nPlease restart the app.',
+                    style: const TextStyle(
+                      color: Colors.redAccent,
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              : FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: ScaleTransition(
+                    scale: _scaleAnimation,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withOpacity(0.1),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                blurRadius: 30,
+                                offset: const Offset(0, 15),
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.check_circle_outline,
+                            size: 80,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 32),
+                        const Text(
+                          'TaskFlow',
+                          style: TextStyle(
+                            fontSize: 42,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            letterSpacing: 2.0,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          'Manage your work seamlessly',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white.withOpacity(0.8),
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                        const SizedBox(height: 64),
+                        const CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
+                          strokeWidth: 3,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              )
-            : const CircularProgressIndicator(),
+        ),
       ),
     );
   }
