@@ -5,11 +5,11 @@ import 'package:taskflow/presentation/tasks/task_list_state.dart';
 import 'package:taskflow/presentation/tasks/task_providers.dart';
 import 'package:taskflow/presentation/projects/project_providers.dart';
 import 'package:taskflow/presentation/tasks/task_form_dialog.dart';
-import 'package:taskflow/presentation/widgets/custom_card.dart';
-import 'package:taskflow/presentation/widgets/custom_app_bar.dart';
-import 'package:taskflow/presentation/widgets/custom_button.dart';
+import 'package:taskflow/core/widgets/custom_card.dart';
+import 'package:taskflow/core/widgets/custom_app_bar.dart';
+import 'package:taskflow/core/widgets/custom_button.dart';
 import 'package:taskflow/presentation/widgets/task_card.dart';
-import 'package:taskflow/presentation/widgets/list_shimmer.dart';
+import 'package:taskflow/core/widgets/list_shimmer.dart';
 import 'package:taskflow/core/constants/task_constants.dart';
 
 import 'package:taskflow/data/models/task_model.dart';

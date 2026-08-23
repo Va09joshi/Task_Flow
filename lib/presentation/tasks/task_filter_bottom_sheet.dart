@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:taskflow/core/constants/task_constants.dart';
 import 'package:taskflow/presentation/tasks/task_list_screen.dart';
 import 'package:taskflow/presentation/tasks/task_providers.dart';
-import 'package:taskflow/presentation/widgets/custom_button.dart';
+import 'package:taskflow/core/widgets/custom_button.dart';
 
 class TaskFilterBottomSheet extends ConsumerWidget {
   const TaskFilterBottomSheet({super.key});

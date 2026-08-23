@@ -5,9 +5,9 @@ import 'package:taskflow/data/models/project_model.dart';
 import 'package:taskflow/data/models/user_model.dart';
 import 'package:taskflow/presentation/tasks/task_providers.dart';
 import 'package:taskflow/presentation/projects/project_providers.dart';
-import 'package:taskflow/presentation/widgets/custom_text_field.dart';
-import 'package:taskflow/presentation/widgets/custom_button.dart';
-import 'package:taskflow/presentation/widgets/custom_app_bar.dart';
+import 'package:taskflow/core/widgets/custom_text_field.dart';
+import 'package:taskflow/core/widgets/custom_button.dart';
+import 'package:taskflow/core/widgets/custom_app_bar.dart';
 import 'package:uuid/uuid.dart';
 
 class TaskFormScreen extends ConsumerStatefulWidget {

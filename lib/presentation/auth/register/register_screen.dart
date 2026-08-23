@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:taskflow/presentation/widgets/custom_text_field.dart';
-import 'package:taskflow/presentation/widgets/custom_button.dart';
-import 'package:taskflow/presentation/widgets/custom_app_bar.dart';
+import 'package:taskflow/core/widgets/custom_text_field.dart';
+import 'package:taskflow/core/widgets/custom_button.dart';
+import 'package:taskflow/core/widgets/custom_app_bar.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});

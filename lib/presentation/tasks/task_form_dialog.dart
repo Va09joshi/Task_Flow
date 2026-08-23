@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:taskflow/data/models/task_model.dart';
 import 'package:taskflow/presentation/tasks/task_providers.dart';
 import 'package:taskflow/core/utils/toast_service.dart';
-import 'package:taskflow/presentation/widgets/custom_button.dart';
-import 'package:taskflow/presentation/widgets/custom_text_field.dart';
+import 'package:taskflow/core/widgets/custom_button.dart';
+import 'package:taskflow/core/widgets/custom_text_field.dart';
 import 'package:taskflow/core/constants/task_constants.dart';
 import 'package:uuid/uuid.dart';
 

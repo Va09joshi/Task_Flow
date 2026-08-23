@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:taskflow/presentation/auth/auth_notifier.dart';
 import 'package:taskflow/presentation/auth/auth_state.dart';
 import 'package:taskflow/core/providers.dart';
-import 'package:taskflow/presentation/widgets/custom_text_field.dart';
-import 'package:taskflow/presentation/widgets/custom_button.dart';
-import 'package:taskflow/presentation/widgets/custom_app_bar.dart';
+import 'package:taskflow/core/widgets/custom_text_field.dart';
+import 'package:taskflow/core/widgets/custom_button.dart';
+import 'package:taskflow/core/widgets/custom_app_bar.dart';
 import 'package:taskflow/core/utils/toast_service.dart';
 import 'package:local_auth/local_auth.dart';
 

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:taskflow/presentation/tasks/task_providers.dart';
-import 'package:taskflow/presentation/widgets/custom_button.dart';
-import 'package:taskflow/presentation/widgets/custom_app_bar.dart';
+import 'package:taskflow/core/widgets/custom_button.dart';
+import 'package:taskflow/core/widgets/custom_app_bar.dart';
 import 'package:taskflow/presentation/tasks/task_form_dialog.dart';
-import 'package:taskflow/presentation/widgets/detail_shimmer.dart';
+import 'package:taskflow/core/widgets/detail_shimmer.dart';
 
 import '../widgets/custom_card.dart';
 

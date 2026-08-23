@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:taskflow/presentation/projects/project_providers.dart';
 import 'package:taskflow/presentation/auth/auth_notifier.dart';
 import 'package:taskflow/presentation/projects/project_form_dialog.dart';
-import 'package:taskflow/presentation/widgets/custom_card.dart';
-import 'package:taskflow/presentation/widgets/custom_app_bar.dart';
-import 'package:taskflow/presentation/widgets/list_shimmer.dart';
+import 'package:taskflow/core/widgets/custom_card.dart';
+import 'package:taskflow/core/widgets/custom_app_bar.dart';
+import 'package:taskflow/core/widgets/list_shimmer.dart';
 
 class ProjectListScreen extends ConsumerWidget {
   const ProjectListScreen({super.key});

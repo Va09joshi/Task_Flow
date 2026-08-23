@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:taskflow/presentation/notifications/notification_providers.dart';
-import 'package:taskflow/presentation/widgets/custom_app_bar.dart';
+import 'package:taskflow/core/widgets/custom_app_bar.dart';
 
 class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});
