@@ -64,6 +64,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
+  Future<void> register(String name, String email, String password) async {
+    state = const AuthState.loading();
+    try {
+      await _authRepository.register(name, email, password);
+      // Stay unauthenticated so the user can login manually
+      state = const AuthState.unauthenticated();
+    } catch (e) {
+      state = AuthState.error(e.toString());
+    }
+  }
+
   void _startTokenRefreshTimer() {
     _tokenRefreshTimer?.cancel();
     // Simulate 15 min expiration by refreshing before it expires.

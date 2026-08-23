@@ -41,6 +41,11 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<void> register(String name, String email, String password) async {
+    await dataSource.register(name, email, password);
+  }
+
+  @override
   Future<String?> getAccessToken() async {
     return await secureStorage.read(key: _accessTokenKey);
   }

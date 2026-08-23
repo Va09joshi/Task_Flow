@@ -133,6 +133,46 @@ class MockDataSource {
     throw Exception('Invalid refresh token');
   }
 
+  Future<void> register(String name, String email, String password) async {
+    await _simulateNetwork();
+    if (simulateValidationError && (email.isEmpty || password.isEmpty)) {
+      throw Exception('Validation Error: Email and password required');
+    }
+
+    if (users.any((u) => u.email == email)) {
+      throw Exception('User already exists');
+    }
+
+    final newUser = User(
+      id: 'user_${users.length + 100}',
+      email: email,
+      name: name,
+      avatarUrl: 'https://i.pravatar.cc/150?u=$email',
+    );
+    users.add(newUser);
+
+    // Add to test credentials so they can login
+    authMock!.testCredentials.add(
+      TestCredential(
+        email: email,
+        password: password,
+        role: 'member',
+        orgId: 'org_1',
+      ),
+    );
+
+    // Add them as an org member to org_1
+    orgMembers.add(
+      OrgMember(
+        id: 'org_member_${orgMembers.length + 100}',
+        orgId: 'org_1',
+        userId: newUser.id,
+        role: 'member',
+        joinedAt: DateTime.now(),
+      ),
+    );
+  }
+
   // ---------------------------------------------------------------------------
   // Projects
   // ---------------------------------------------------------------------------
