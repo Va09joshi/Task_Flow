@@ -27,7 +27,9 @@ class TaskFilterBottomSheet extends ConsumerWidget {
             children: [
               Text(
                 'Filter Tasks',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
               IconButton(
                 icon: const Icon(Icons.close),
@@ -41,11 +43,46 @@ class TaskFilterBottomSheet extends ConsumerWidget {
           Wrap(
             spacing: 8.0,
             children: [
-              _buildChoiceChip(context, ref, 'All', null, filterStatus, taskFilterStatusProvider),
-              _buildChoiceChip(context, ref, 'To Do', TaskStatus.todo, filterStatus, taskFilterStatusProvider),
-              _buildChoiceChip(context, ref, 'In Progress', TaskStatus.inProgress, filterStatus, taskFilterStatusProvider),
-              _buildChoiceChip(context, ref, 'Review', TaskStatus.review, filterStatus, taskFilterStatusProvider),
-              _buildChoiceChip(context, ref, 'Done', TaskStatus.done, filterStatus, taskFilterStatusProvider),
+              _buildChoiceChip(
+                context,
+                ref,
+                'All',
+                null,
+                filterStatus,
+                taskFilterStatusProvider,
+              ),
+              _buildChoiceChip(
+                context,
+                ref,
+                'To Do',
+                TaskStatus.todo,
+                filterStatus,
+                taskFilterStatusProvider,
+              ),
+              _buildChoiceChip(
+                context,
+                ref,
+                'In Progress',
+                TaskStatus.inProgress,
+                filterStatus,
+                taskFilterStatusProvider,
+              ),
+              _buildChoiceChip(
+                context,
+                ref,
+                'Review',
+                TaskStatus.review,
+                filterStatus,
+                taskFilterStatusProvider,
+              ),
+              _buildChoiceChip(
+                context,
+                ref,
+                'Done',
+                TaskStatus.done,
+                filterStatus,
+                taskFilterStatusProvider,
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -54,10 +91,38 @@ class TaskFilterBottomSheet extends ConsumerWidget {
           Wrap(
             spacing: 8.0,
             children: [
-              _buildChoiceChip(context, ref, 'All', null, filterPriority, taskFilterPriorityProvider),
-              _buildChoiceChip(context, ref, 'Low', TaskPriority.low, filterPriority, taskFilterPriorityProvider),
-              _buildChoiceChip(context, ref, 'Medium', TaskPriority.medium, filterPriority, taskFilterPriorityProvider),
-              _buildChoiceChip(context, ref, 'High', TaskPriority.high, filterPriority, taskFilterPriorityProvider),
+              _buildChoiceChip(
+                context,
+                ref,
+                'All',
+                null,
+                filterPriority,
+                taskFilterPriorityProvider,
+              ),
+              _buildChoiceChip(
+                context,
+                ref,
+                'Low',
+                TaskPriority.low,
+                filterPriority,
+                taskFilterPriorityProvider,
+              ),
+              _buildChoiceChip(
+                context,
+                ref,
+                'Medium',
+                TaskPriority.medium,
+                filterPriority,
+                taskFilterPriorityProvider,
+              ),
+              _buildChoiceChip(
+                context,
+                ref,
+                'High',
+                TaskPriority.high,
+                filterPriority,
+                taskFilterPriorityProvider,
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -69,21 +134,29 @@ class TaskFilterBottomSheet extends ConsumerWidget {
               value: filterAssignee,
               items: [
                 const DropdownMenuItem(value: null, child: Text('All')),
-                ...members.map((m) => DropdownMenuItem(value: m.id, child: Text(m.name)))
+                ...members.map(
+                  (m) => DropdownMenuItem(value: m.id, child: Text(m.name)),
+                ),
               ],
-              onChanged: (val) => ref.read(taskFilterAssigneeProvider.notifier).state = val,
+              onChanged: (val) =>
+                  ref.read(taskFilterAssigneeProvider.notifier).state = val,
             ),
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, st) => const Text('Error loading members'),
           ),
           const SizedBox(height: 16),
-          const Text('Due Date Range', style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text(
+            'Due Date Range',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 8),
           OutlinedButton.icon(
             icon: const Icon(Icons.date_range),
-            label: Text(filterDueDateRange != null
-                ? '${filterDueDateRange.start.toString().split(' ')[0]} - ${filterDueDateRange.end.toString().split(' ')[0]}'
-                : 'Select Range'),
+            label: Text(
+              filterDueDateRange != null
+                  ? '${filterDueDateRange.start.toString().split(' ')[0]} - ${filterDueDateRange.end.toString().split(' ')[0]}'
+                  : 'Select Range',
+            ),
             onPressed: () async {
               final range = await showDateRangePicker(
                 context: context,
@@ -105,7 +178,8 @@ class TaskFilterBottomSheet extends ConsumerWidget {
                     ref.read(taskFilterStatusProvider.notifier).state = null;
                     ref.read(taskFilterPriorityProvider.notifier).state = null;
                     ref.read(taskFilterAssigneeProvider.notifier).state = null;
-                    ref.read(taskFilterDueDateRangeProvider.notifier).state = null;
+                    ref.read(taskFilterDueDateRangeProvider.notifier).state =
+                        null;
                   },
                   child: const Text('Clear'),
                 ),
@@ -124,7 +198,14 @@ class TaskFilterBottomSheet extends ConsumerWidget {
     );
   }
 
-  Widget _buildChoiceChip(BuildContext context, WidgetRef ref, String label, String? value, String? groupValue, StateProvider<String?> provider) {
+  Widget _buildChoiceChip(
+    BuildContext context,
+    WidgetRef ref,
+    String label,
+    String? value,
+    String? groupValue,
+    StateProvider<String?> provider,
+  ) {
     final isSelected = groupValue == value;
     final theme = Theme.of(context);
     return ChoiceChip(
@@ -132,11 +213,15 @@ class TaskFilterBottomSheet extends ConsumerWidget {
       selected: isSelected,
       selectedColor: theme.colorScheme.primary.withValues(alpha: 0.15),
       labelStyle: TextStyle(
-        color: isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurface,
+        color: isSelected
+            ? theme.colorScheme.primary
+            : theme.colorScheme.onSurface,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
       side: BorderSide(
-        color: isSelected ? theme.colorScheme.primary.withValues(alpha: 0.5) : theme.dividerColor,
+        color: isSelected
+            ? theme.colorScheme.primary.withValues(alpha: 0.5)
+            : theme.dividerColor,
       ),
       onSelected: (_) => ref.read(provider.notifier).state = value,
     );

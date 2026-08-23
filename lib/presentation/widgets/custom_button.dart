@@ -24,36 +24,29 @@ class CustomButton extends StatelessWidget {
         elevation: 0,
         backgroundColor: backgroundColor,
       ),
-        child: isLoading
-            ? const SizedBox(
-                height: 24,
-                width: 24,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.5,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              )
-            : Text(
-                text, 
-                style: const TextStyle(
-                  fontSize: 16, 
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.5,
-                ),
+      child: isLoading
+          ? const SizedBox(
+              height: 24,
+              width: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.5,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
+            )
+          : Text(
+              text,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5,
+              ),
+            ),
     );
 
     if (isFullWidth) {
-      button = SizedBox(
-        width: double.infinity,
-        height: 56,
-        child: button,
-      );
+      button = SizedBox(width: double.infinity, height: 56, child: button);
     } else {
-      button = SizedBox(
-        height: 56,
-        child: button,
-      );
+      button = SizedBox(height: 56, child: button);
     }
     return button;
   }

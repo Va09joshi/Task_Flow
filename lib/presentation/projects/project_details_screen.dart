@@ -24,9 +24,7 @@ class ProjectDetailsScreen extends ConsumerWidget {
     final tasksAsync = ref.watch(tasksByProjectProvider(projectId));
 
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: 'Project Details',
-      ),
+      appBar: const CustomAppBar(title: 'Project Details'),
       body: projectsAsync.when(
         data: (projects) {
           final project = projects.where((p) => p.id == projectId).firstOrNull;
@@ -45,16 +43,15 @@ class ProjectDetailsScreen extends ConsumerWidget {
                     children: [
                       Text(
                         project.name,
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
-                        ),
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(fontWeight: FontWeight.w800),
                       ),
                       const SizedBox(height: 12),
                       Text(
                         project.description,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          height: 1.5,
-                        ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyLarge?.copyWith(height: 1.5),
                       ),
                       const SizedBox(height: 24),
                       // Admin Actions for Project
@@ -70,9 +67,16 @@ class ProjectDetailsScreen extends ConsumerWidget {
                                   context: context,
                                   isScrollControlled: true,
                                   useSafeArea: true,
-                                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-                                  builder: (_) => ProjectFormDialog(projectToEdit: project),
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).scaffoldBackgroundColor,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(20),
+                                    ),
+                                  ),
+                                  builder: (_) =>
+                                      ProjectFormDialog(projectToEdit: project),
                                 );
                               },
                             ),
@@ -86,16 +90,31 @@ class ProjectDetailsScreen extends ConsumerWidget {
                                   context: context,
                                   builder: (ctx) => AlertDialog(
                                     title: const Text('Delete Project'),
-                                    content: const Text('Are you sure you want to delete this project?'),
+                                    content: const Text(
+                                      'Are you sure you want to delete this project?',
+                                    ),
                                     actions: [
-                                      TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(ctx),
+                                        child: const Text('Cancel'),
+                                      ),
                                       TextButton(
                                         onPressed: () {
                                           Navigator.pop(ctx); // Close dialog
-                                          ref.read(projectNotifierProvider.notifier).deleteProject(projectId);
-                                          Navigator.pop(context); // Go back to list
+                                          ref
+                                              .read(
+                                                projectNotifierProvider
+                                                    .notifier,
+                                              )
+                                              .deleteProject(projectId);
+                                          Navigator.pop(
+                                            context,
+                                          ); // Go back to list
                                         },
-                                        child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                        child: const Text(
+                                          'Delete',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -109,7 +128,13 @@ class ProjectDetailsScreen extends ConsumerWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('Tasks', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          const Text(
+                            'Tasks',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           CustomButton(
                             text: '+ Add Task',
                             isFullWidth: false,
@@ -118,35 +143,60 @@ class ProjectDetailsScreen extends ConsumerWidget {
                                 context: context,
                                 isScrollControlled: true,
                                 useSafeArea: true,
-                                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-                                builder: (_) => TaskFormDialog(projectId: projectId),
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).scaffoldBackgroundColor,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20),
+                                  ),
+                                ),
+                                builder: (_) =>
+                                    TaskFormDialog(projectId: projectId),
                               );
                             },
                           ),
                         ],
                       ),
                       const SizedBox(height: 16),
-                      
+
                       tasksAsync.when(
                         data: (projectTasks) {
-                          if (projectTasks.isEmpty) return const Text('No tasks for this project.');
-                          
+                          if (projectTasks.isEmpty)
+                            return const Text('No tasks for this project.');
+
                           // Task Summary grouped by status
-                          final todo = projectTasks.where((t) => t.status == 'todo').length;
-                          final inProgress = projectTasks.where((t) => t.status == 'in_progress').length;
-                          final review = projectTasks.where((t) => t.status == 'review').length;
-                          final done = projectTasks.where((t) => t.status == 'done').length;
+                          final todo = projectTasks
+                              .where((t) => t.status == 'todo')
+                              .length;
+                          final inProgress = projectTasks
+                              .where((t) => t.status == 'in_progress')
+                              .length;
+                          final review = projectTasks
+                              .where((t) => t.status == 'review')
+                              .length;
+                          final done = projectTasks
+                              .where((t) => t.status == 'done')
+                              .length;
 
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   _buildSummaryCard('Todo', todo, Colors.grey),
-                                  _buildSummaryCard('In Progress', inProgress, Colors.blue),
-                                  _buildSummaryCard('Review', review, Colors.orange),
+                                  _buildSummaryCard(
+                                    'In Progress',
+                                    inProgress,
+                                    Colors.blue,
+                                  ),
+                                  _buildSummaryCard(
+                                    'Review',
+                                    review,
+                                    Colors.orange,
+                                  ),
                                   _buildSummaryCard('Done', done, Colors.green),
                                 ],
                               ),
@@ -163,7 +213,9 @@ class ProjectDetailsScreen extends ConsumerWidget {
                   data: (projectTasks) {
                     if (projectTasks.isEmpty) return const SizedBox.shrink();
                     return Column(
-                      children: projectTasks.map((task) => TaskListItem(task: task)).toList(),
+                      children: projectTasks
+                          .map((task) => TaskListItem(task: task))
+                          .toList(),
                     );
                   },
                   loading: () => const Padding(
@@ -187,7 +239,9 @@ class ProjectDetailsScreen extends ConsumerWidget {
             isScrollControlled: true,
             useSafeArea: true,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
             builder: (_) => TaskFormDialog(projectId: projectId),
           );
         },
@@ -205,9 +259,23 @@ class ProjectDetailsScreen extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
           child: Column(
             children: [
-              Text(title, style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12), textAlign: TextAlign.center),
+              Text(
+                title,
+                style: TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 8),
-              Text('$count', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              Text(
+                '$count',
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         ),

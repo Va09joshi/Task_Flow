@@ -36,9 +36,9 @@ class TaskDetailsScreen extends ConsumerWidget {
                 const SizedBox(height: 12),
                 Text(
                   task.description,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    height: 1.5,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(height: 1.5),
                 ),
                 const SizedBox(height: 32),
                 CustomCard(
@@ -67,8 +67,14 @@ class TaskDetailsScreen extends ConsumerWidget {
                           context: context,
                           isScrollControlled: true,
                           useSafeArea: true,
-                          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+                          backgroundColor: Theme.of(
+                            context,
+                          ).scaffoldBackgroundColor,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20),
+                            ),
+                          ),
                           builder: (_) => TaskFormDialog(
                             taskToEdit: task,
                             projectId: task.projectId,
@@ -86,16 +92,26 @@ class TaskDetailsScreen extends ConsumerWidget {
                           context: context,
                           builder: (ctx) => AlertDialog(
                             title: const Text('Delete Task'),
-                            content: const Text('Are you sure you want to delete this task?'),
+                            content: const Text(
+                              'Are you sure you want to delete this task?',
+                            ),
                             actions: [
-                              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+                              TextButton(
+                                onPressed: () => Navigator.pop(ctx),
+                                child: const Text('Cancel'),
+                              ),
                               TextButton(
                                 onPressed: () {
                                   Navigator.pop(ctx); // Close dialog
-                                  ref.read(taskNotifierProvider.notifier).deleteTask(taskId);
+                                  ref
+                                      .read(taskNotifierProvider.notifier)
+                                      .deleteTask(taskId);
                                   Navigator.pop(context); // Go back to list
                                 },
-                                child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                child: const Text(
+                                  'Delete',
+                                  style: TextStyle(color: Colors.red),
+                                ),
                               ),
                             ],
                           ),
@@ -103,7 +119,7 @@ class TaskDetailsScreen extends ConsumerWidget {
                       },
                     ),
                   ],
-                )
+                ),
               ],
             ),
           );
@@ -120,7 +136,13 @@ class TaskDetailsScreen extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.grey)),
+          Text(
+            label,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.grey,
+            ),
+          ),
           Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
         ],
       ),
@@ -133,13 +155,16 @@ class TaskDetailsScreen extends ConsumerWidget {
     }
 
     final userAsync = ref.watch(userProvider(assigneeId));
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('Assignee', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey)),
+          const Text(
+            'Assignee',
+            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey),
+          ),
           userAsync.when(
             data: (user) {
               if (user == null) return const Text('Unknown User');
@@ -152,13 +177,17 @@ class TaskDetailsScreen extends ConsumerWidget {
                     ),
                     const SizedBox(width: 8),
                   ],
-                  Text(user.name, style: const TextStyle(fontWeight: FontWeight.w500)),
+                  Text(
+                    user.name,
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
                 ],
               );
             },
             loading: () => const SizedBox(
-              width: 16, height: 16, 
-              child: CircularProgressIndicator(strokeWidth: 2)
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(strokeWidth: 2),
             ),
             error: (_, __) => const Text('Error loading user'),
           ),
@@ -167,4 +196,3 @@ class TaskDetailsScreen extends ConsumerWidget {
     );
   }
 }
-

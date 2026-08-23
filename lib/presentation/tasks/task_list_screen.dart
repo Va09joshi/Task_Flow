@@ -18,7 +18,9 @@ import 'package:taskflow/presentation/tasks/task_filter_bottom_sheet.dart';
 final taskFilterStatusProvider = StateProvider<String?>((ref) => null);
 final taskFilterPriorityProvider = StateProvider<String?>((ref) => null);
 final taskFilterAssigneeProvider = StateProvider<String?>((ref) => null);
-final taskFilterDueDateRangeProvider = StateProvider<DateTimeRange?>((ref) => null);
+final taskFilterDueDateRangeProvider = StateProvider<DateTimeRange?>(
+  (ref) => null,
+);
 
 class TaskListScreen extends ConsumerWidget {
   const TaskListScreen({super.key});
@@ -43,12 +45,10 @@ class TaskListScreen extends ConsumerWidget {
                 context: context,
                 isScrollControlled: true,
                 useSafeArea: true,
-                backgroundColor: Theme
-                    .of(context)
-                    .scaffoldBackgroundColor,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20))),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
                 builder: (_) => const TaskFilterBottomSheet(),
               );
             },
@@ -72,12 +72,19 @@ class TaskListScreen extends ConsumerWidget {
                   if (filterDueDateRange != null && t.dueDate != null) {
                     final due = DateTime.parse(t.dueDate!);
                     // Start of start date, end of end date for inclusive filtering
-                    final start = DateTime(filterDueDateRange.start.year,
-                        filterDueDateRange.start.month, filterDueDateRange.start
-                            .day);
-                    final end = DateTime(filterDueDateRange.end.year,
-                        filterDueDateRange.end.month, filterDueDateRange.end
-                            .day, 23, 59, 59);
+                    final start = DateTime(
+                      filterDueDateRange.start.year,
+                      filterDueDateRange.start.month,
+                      filterDueDateRange.start.day,
+                    );
+                    final end = DateTime(
+                      filterDueDateRange.end.year,
+                      filterDueDateRange.end.month,
+                      filterDueDateRange.end.day,
+                      23,
+                      59,
+                      59,
+                    );
                     if (due.isBefore(start) || due.isAfter(end)) return false;
                   }
                   return true;
@@ -89,7 +96,8 @@ class TaskListScreen extends ConsumerWidget {
                   );
                 }
                 return RefreshIndicator(
-                  onRefresh: () async => ref.read(taskListNotifierProvider.notifier).fetchTasks(),
+                  onRefresh: () async =>
+                      ref.read(taskListNotifierProvider.notifier).fetchTasks(),
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     itemCount: tasks.length,
@@ -124,12 +132,10 @@ class TaskListScreen extends ConsumerWidget {
               context: context,
               isScrollControlled: true,
               useSafeArea: true,
-              backgroundColor: Theme
-                  .of(context)
-                  .scaffoldBackgroundColor,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(20))),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
               builder: (_) => TaskFormDialog(projectId: projects.first.id),
             );
           }
@@ -137,7 +143,6 @@ class TaskListScreen extends ConsumerWidget {
         child: const Icon(Icons.add),
       ),
     );
-
   }
 }
 
@@ -148,9 +153,6 @@ class TaskListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return TaskCard(
-      task: task,
-      onTap: () => context.push('/tasks/${task.id}'),
-    );
+    return TaskCard(task: task, onTap: () => context.push('/tasks/${task.id}'));
   }
 }

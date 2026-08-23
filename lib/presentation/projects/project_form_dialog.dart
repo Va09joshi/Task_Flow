@@ -26,8 +26,12 @@ class _ProjectFormDialogState extends ConsumerState<ProjectFormDialog> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.projectToEdit?.name ?? '');
-    _descController = TextEditingController(text: widget.projectToEdit?.description ?? '');
+    _nameController = TextEditingController(
+      text: widget.projectToEdit?.name ?? '',
+    );
+    _descController = TextEditingController(
+      text: widget.projectToEdit?.description ?? '',
+    );
     _status = widget.projectToEdit?.status ?? 'active';
   }
 
@@ -44,7 +48,7 @@ class _ProjectFormDialogState extends ConsumerState<ProjectFormDialog> {
       final orgId = ref.read(currentOrgIdProvider);
 
       if (orgId == null) return;
-      
+
       if (widget.projectToEdit == null) {
         final newProject = Project(
           id: const Uuid().v4(),
@@ -74,7 +78,7 @@ class _ProjectFormDialogState extends ConsumerState<ProjectFormDialog> {
   @override
   Widget build(BuildContext context) {
     final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
-    
+
     return Padding(
       padding: EdgeInsets.only(
         bottom: bottomPadding,
@@ -90,27 +94,36 @@ class _ProjectFormDialogState extends ConsumerState<ProjectFormDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                widget.projectToEdit == null ? 'Create Project' : 'Edit Project',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                widget.projectToEdit == null
+                    ? 'Create Project'
+                    : 'Edit Project',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
               CustomTextField(
                 controller: _nameController,
                 labelText: 'Project Name',
-                validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                validator: (val) =>
+                    val == null || val.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 16),
               CustomTextField(
                 controller: _descController,
                 labelText: 'Description',
                 maxLines: 3,
-                validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                validator: (val) =>
+                    val == null || val.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 value: _status,
-                decoration: const InputDecoration(labelText: 'Status', filled: true),
+                decoration: const InputDecoration(
+                  labelText: 'Status',
+                  filled: true,
+                ),
                 items: const [
                   DropdownMenuItem(value: 'active', child: Text('Active')),
                   DropdownMenuItem(value: 'archived', child: Text('Archived')),
@@ -122,16 +135,13 @@ class _ProjectFormDialogState extends ConsumerState<ProjectFormDialog> {
                 children: [
                   Expanded(
                     child: TextButton(
-                      onPressed: () => Navigator.pop(context), 
+                      onPressed: () => Navigator.pop(context),
                       child: const Text('Cancel'),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: CustomButton(
-                      text: 'Save',
-                      onPressed: _submit,
-                    ),
+                    child: CustomButton(text: 'Save', onPressed: _submit),
                   ),
                 ],
               ),

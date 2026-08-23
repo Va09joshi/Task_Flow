@@ -37,17 +37,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       final email = _emailController.text.trim();
       final prefs = ref.read(sharedPreferencesProvider);
-      
+
       if (_rememberMe) {
         prefs.setString('remembered_email', email);
       } else {
         prefs.remove('remembered_email');
       }
 
-      ref.read(authNotifierProvider.notifier).login(
-            email,
-            _passwordController.text,
-          );
+      ref
+          .read(authNotifierProvider.notifier)
+          .login(email, _passwordController.text);
     }
   }
 
@@ -106,7 +105,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   labelText: 'Email',
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Email is required';
+                    if (value == null || value.isEmpty)
+                      return 'Email is required';
                     if (!value.contains('@')) return 'Invalid email format';
                     return null;
                   },
@@ -117,7 +117,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   labelText: 'Password',
                   obscureText: true,
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Password is required';
+                    if (value == null || value.isEmpty)
+                      return 'Password is required';
                     return null;
                   },
                 ),
@@ -144,7 +145,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 TextButton(
                   onPressed: () => context.push('/register'),
                   child: const Text('Don\'t have an account? Register'),
-                )
+                ),
               ],
             ),
           ),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   // Central Constants
-  static const Color primaryColor = Color(0xFF10B981); // Emerald Green 500
-  static const Color primaryAccent = Color(0xFF059669); // Emerald Green 600
+  static const Color primaryColor = Color(0xFF450C3F);
+  static const Color primaryAccent = Color(0xFF450C3F);
   static const Color backgroundLight = Color(0xFFF8FAFC); // Slate 50
   static const Color backgroundDark = Color(0xFF121212); // Deep dark charcoal
   static const Color surfaceLight = Colors.white;
@@ -12,7 +12,7 @@ class AppTheme {
   static const Color textDark = Color(0xFFE0E0E0); // Off-white
   static const Color borderLight = Color(0xFFE2E8F0); // Slate 200
   static const Color borderDark = Color(0xFF333333); // Dark charcoal border
-  
+
   static const double borderRadius = 12.0;
 
   static ThemeData get lightTheme {
@@ -37,7 +37,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: surfaceLight,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
           borderSide: const BorderSide(color: borderLight, width: 1.5),
@@ -101,7 +104,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: surfaceDark,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
           borderSide: const BorderSide(color: borderDark, width: 1.5),

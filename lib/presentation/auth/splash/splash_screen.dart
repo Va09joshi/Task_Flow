@@ -30,7 +30,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       // Wait for MockDataSource to load
       await ref.read(mockDataSourceProvider).init();
       debugPrint('SplashScreen: MockDataSource initialized.');
-      
+
       // Check session
       await ref.read(authNotifierProvider.notifier).checkSession();
       debugPrint('SplashScreen: Session check complete.');
@@ -47,7 +47,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authNotifierProvider);
-    
+
     void handleNavigation(AuthState state) async {
       if (!mounted) return;
       switch (state) {
@@ -56,8 +56,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
           _biometricPrompted = true;
           final LocalAuthentication auth = LocalAuthentication();
           try {
-            final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
-            final bool canAuthenticate = canAuthenticateWithBiometrics || await auth.isDeviceSupported();
+            final bool canAuthenticateWithBiometrics =
+                await auth.canCheckBiometrics;
+            final bool canAuthenticate =
+                canAuthenticateWithBiometrics || await auth.isDeviceSupported();
             if (canAuthenticate) {
               final bool didAuthenticate = await auth.authenticate(
                 localizedReason: 'Please authenticate to access TaskFlow',
@@ -97,14 +99,16 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     return Scaffold(
       body: Center(
-        child: _errorMsg != null 
-          ? Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text('Error: $_errorMsg\n\nPlease restart the app.', style: const TextStyle(color: Colors.red)),
-            )
-          : const CircularProgressIndicator(),
+        child: _errorMsg != null
+            ? Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Error: $_errorMsg\n\nPlease restart the app.',
+                  style: const TextStyle(color: Colors.red),
+                ),
+              )
+            : const CircularProgressIndicator(),
       ),
     );
   }
 }
-

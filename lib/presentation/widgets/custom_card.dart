@@ -19,10 +19,7 @@ class CustomCard extends StatelessWidget {
       // Elevation and shape are now handled by CardTheme in app_theme.dart
       margin: EdgeInsets.zero, // Default to zero margin, parent can pad it
       clipBehavior: Clip.antiAlias,
-      child: Padding(
-        padding: padding,
-        child: child,
-      ),
+      child: Padding(padding: padding, child: child),
     );
   }
 }

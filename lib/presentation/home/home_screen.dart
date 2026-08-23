@@ -26,7 +26,7 @@ class HomeScreen extends ConsumerWidget {
             onPressed: () {
               context.push('/profile');
             },
-          )
+          ),
         ],
       ),
       body: Padding(

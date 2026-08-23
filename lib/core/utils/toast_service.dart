@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class ToastService {
   static void showError(BuildContext context, String message) {
     _showToast(
-      context, 
-      message, 
+      context,
+      message,
       backgroundColor: Theme.of(context).colorScheme.surface,
       textColor: Theme.of(context).colorScheme.onSurface,
       iconColor: Colors.redAccent,
@@ -14,8 +14,8 @@ class ToastService {
 
   static void showSuccess(BuildContext context, String message) {
     _showToast(
-      context, 
-      message, 
+      context,
+      message,
       backgroundColor: Theme.of(context).colorScheme.primary,
       icon: Icons.check_circle_outline,
     );
@@ -23,14 +23,21 @@ class ToastService {
 
   static void showInfo(BuildContext context, String message) {
     _showToast(
-      context, 
-      message, 
+      context,
+      message,
       backgroundColor: Colors.black87,
       icon: Icons.info_outline,
     );
   }
 
-  static void _showToast(BuildContext context, String message, {required Color backgroundColor, required IconData icon, Color textColor = Colors.white, Color? iconColor}) {
+  static void _showToast(
+    BuildContext context,
+    String message, {
+    required Color backgroundColor,
+    required IconData icon,
+    Color textColor = Colors.white,
+    Color? iconColor,
+  }) {
     final overlay = ScaffoldMessenger.of(context);
     overlay.clearSnackBars();
     overlay.showSnackBar(

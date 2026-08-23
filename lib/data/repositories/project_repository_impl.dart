@@ -18,7 +18,10 @@ class ProjectRepositoryImpl implements ProjectRepository {
       final response = await dataSource.getProjects(orgId);
       // Cache the response for offline fallback
       final jsonList = response.projects.map((p) => p.toJson()).toList();
-      await sharedPrefs.setString('cached_projects_$orgId', jsonEncode(jsonList));
+      await sharedPrefs.setString(
+        'cached_projects_$orgId',
+        jsonEncode(jsonList),
+      );
       return response.projects;
     } catch (e) {
       // Attempt offline fallback from cache

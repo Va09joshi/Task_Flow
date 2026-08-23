@@ -17,9 +17,7 @@ class ProjectListScreen extends ConsumerWidget {
     final isAdmin = ref.watch(isAdminProvider);
 
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: 'Projects',
-      ),
+      appBar: const CustomAppBar(title: 'Projects'),
       body: projectsAsyncValue.when(
         data: (projects) {
           if (projects.isEmpty) {
@@ -34,12 +32,17 @@ class ProjectListScreen extends ConsumerWidget {
                 return InkWell(
                   onTap: () => context.push('/projects/${project.id}'),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                      vertical: 16.0,
+                    ),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
                       border: Border(
                         bottom: BorderSide(
-                          color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
+                          color: Theme.of(
+                            context,
+                          ).dividerColor.withValues(alpha: 0.1),
                           width: 1.0,
                         ),
                       ),
@@ -53,24 +56,30 @@ class ProjectListScreen extends ConsumerWidget {
                             children: [
                               Text(
                                 project.name,
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.w700),
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 '${project.taskCount} tasks • Status: ${project.status}',
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: 0.6),
+                                      fontWeight: FontWeight.w500,
+                                    ),
                               ),
                             ],
                           ),
                         ),
                         if (isAdmin)
                           IconButton(
-                            icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                            icon: const Icon(
+                              Icons.delete_outline,
+                              color: Colors.redAccent,
+                            ),
                             onPressed: () {
                               _showDeleteDialog(context, ref, project.id);
                             },
@@ -95,7 +104,9 @@ class ProjectListScreen extends ConsumerWidget {
             isScrollControlled: true,
             useSafeArea: true,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
             builder: (_) => const ProjectFormDialog(),
           );
         },
@@ -104,7 +115,11 @@ class ProjectListScreen extends ConsumerWidget {
     );
   }
 
-  void _showDeleteDialog(BuildContext context, WidgetRef ref, String projectId) {
+  void _showDeleteDialog(
+    BuildContext context,
+    WidgetRef ref,
+    String projectId,
+  ) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -118,7 +133,9 @@ class ProjectListScreen extends ConsumerWidget {
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
-              ref.read(projectNotifierProvider.notifier).deleteProject(projectId);
+              ref
+                  .read(projectNotifierProvider.notifier)
+                  .deleteProject(projectId);
             },
             child: const Text('Delete', style: TextStyle(color: Colors.red)),
           ),

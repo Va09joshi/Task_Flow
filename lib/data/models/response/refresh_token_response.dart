@@ -8,7 +8,8 @@ abstract class RefreshTokenResponse with _$RefreshTokenResponse {
   const factory RefreshTokenResponse({
     @JsonKey(name: 'access_token') required String accessToken,
     @JsonKey(name: 'refresh_token') required String refreshToken,
-    @JsonKey(name: 'access_token_expires_in_seconds') required int accessTokenExpiresInSeconds,
+    @JsonKey(name: 'access_token_expires_in_seconds')
+    required int accessTokenExpiresInSeconds,
   }) = _RefreshTokenResponse;
 
   factory RefreshTokenResponse.fromJson(Map<String, dynamic> json) =>

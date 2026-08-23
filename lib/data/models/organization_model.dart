@@ -11,5 +11,6 @@ abstract class Organization with _$Organization {
     @JsonKey(name: 'created_at') required DateTime createdAt,
   }) = _Organization;
 
-  factory Organization.fromJson(Map<String, dynamic> json) => _$OrganizationFromJson(json);
+  factory Organization.fromJson(Map<String, dynamic> json) =>
+      _$OrganizationFromJson(json);
 }

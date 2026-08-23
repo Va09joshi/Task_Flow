@@ -6,7 +6,9 @@ import 'package:taskflow/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('App start, login, and verify project list', (WidgetTester tester) async {
+  testWidgets('App start, login, and verify project list', (
+    WidgetTester tester,
+  ) async {
     app.main();
     await tester.pumpAndSettle();
 
@@ -14,12 +16,19 @@ void main() {
     expect(find.text('TaskFlow'), findsOneWidget);
 
     // Enter mock credentials
-    await tester.enterText(find.byType(TextFormField).first, 'ava.admin@nimbusdigital.test');
+    await tester.enterText(
+      find.byType(TextFormField).first,
+      'ava.admin@nimbusdigital.test',
+    );
     await tester.enterText(find.byType(TextFormField).last, 'Password123!');
 
     // Tap login
-    await tester.tap(find.text('Login').last); // .last because AppBar also has 'Login'
-    await tester.pumpAndSettle(const Duration(seconds: 2)); // Wait for async auth mock
+    await tester.tap(
+      find.text('Login').last,
+    ); // .last because AppBar also has 'Login'
+    await tester.pumpAndSettle(
+      const Duration(seconds: 2),
+    ); // Wait for async auth mock
 
     // Verify we reached the home/dashboard or project list
     expect(find.text('Welcome to TaskFlow'), findsOneWidget);

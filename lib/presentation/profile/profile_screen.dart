@@ -39,32 +39,32 @@ class ProfileScreen extends ConsumerWidget {
                   backgroundImage: user.avatarUrl.isNotEmpty
                       ? NetworkImage(user.avatarUrl)
                       : null,
-                  backgroundColor: Theme.of(context)
-                      .colorScheme
-                      .primary
-                      .withValues(alpha: 0.1),
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.primary.withValues(alpha: 0.1),
                   child: user.avatarUrl.isEmpty
-                      ? Icon(Icons.person,
+                      ? Icon(
+                          Icons.person,
                           size: 60,
-                          color: Theme.of(context).colorScheme.primary)
+                          color: Theme.of(context).colorScheme.primary,
+                        )
                       : null,
                 ),
                 const SizedBox(height: 24),
                 Text(
                   user.name,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   user.email,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.6)),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.6),
+                  ),
                 ),
                 const SizedBox(height: 32),
                 _buildInfoRow(context, 'Role', role),
@@ -96,17 +96,20 @@ class ProfileScreen extends ConsumerWidget {
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-            color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
+          color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: const TextStyle(fontWeight: FontWeight.w600)),
-          Text(value,
-              style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.w600)),
+          Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
+          Text(
+            value,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ],
       ),
     );

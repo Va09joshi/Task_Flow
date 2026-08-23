@@ -15,5 +15,6 @@ abstract class Notification with _$Notification {
     @JsonKey(name: 'created_at') required DateTime createdAt,
   }) = _Notification;
 
-  factory Notification.fromJson(Map<String, dynamic> json) => _$NotificationFromJson(json);
+  factory Notification.fromJson(Map<String, dynamic> json) =>
+      _$NotificationFromJson(json);
 }

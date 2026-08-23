@@ -11,5 +11,6 @@ abstract class OrgMember with _$OrgMember {
     required String role, // 'org_admin' or 'member'
   }) = _OrgMember;
 
-  factory OrgMember.fromJson(Map<String, dynamic> json) => _$OrgMemberFromJson(json);
+  factory OrgMember.fromJson(Map<String, dynamic> json) =>
+      _$OrgMemberFromJson(json);
 }

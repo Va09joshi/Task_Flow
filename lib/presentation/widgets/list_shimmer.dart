@@ -9,7 +9,8 @@ class ListShimmer extends StatefulWidget {
   State<ListShimmer> createState() => _ListShimmerState();
 }
 
-class _ListShimmerState extends State<ListShimmer> with SingleTickerProviderStateMixin {
+class _ListShimmerState extends State<ListShimmer>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -45,7 +46,10 @@ class _ListShimmerState extends State<ListShimmer> with SingleTickerProviderStat
           },
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 16.0,
+            ),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(12),
@@ -60,7 +64,9 @@ class _ListShimmerState extends State<ListShimmer> with SingleTickerProviderStat
                   width: 150,
                   height: 16,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
+                    color: Theme.of(
+                      context,
+                    ).dividerColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -69,7 +75,9 @@ class _ListShimmerState extends State<ListShimmer> with SingleTickerProviderStat
                   width: double.infinity,
                   height: 12,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
+                    color: Theme.of(
+                      context,
+                    ).dividerColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -78,7 +86,9 @@ class _ListShimmerState extends State<ListShimmer> with SingleTickerProviderStat
                   width: 200,
                   height: 12,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
+                    color: Theme.of(
+                      context,
+                    ).dividerColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),

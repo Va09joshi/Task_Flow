@@ -6,14 +6,13 @@ import 'package:taskflow/domain/repositories/user_repository.dart';
 import 'package:taskflow/presentation/auth/auth_state.dart';
 import 'package:taskflow/data/models/user_model.dart';
 
-
 class AuthNotifier extends StateNotifier<AuthState> {
   final AuthRepository _authRepository;
   final UserRepository _userRepository;
   Timer? _tokenRefreshTimer;
 
   AuthNotifier(this._authRepository, this._userRepository)
-      : super(const AuthState.loading());
+    : super(const AuthState.loading());
 
   Future<void> checkSession() async {
     state = const AuthState.loading();
@@ -38,7 +37,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
           return;
         }
       }
-      
+
       state = const AuthState.unauthenticated();
     } catch (e) {
       state = const AuthState.unauthenticated();
@@ -48,16 +47,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> login(String email, String password) async {
     state = const AuthState.loading();
     try {
-      final (response, user, role, orgId) = await _authRepository.login(email, password);
+      final (response, user, role, orgId) = await _authRepository.login(
+        email,
+        password,
+      );
       await _authRepository.saveTokens(
-          response.accessToken, response.refreshToken);
+        response.accessToken,
+        response.refreshToken,
+      );
       await _authRepository.saveSessionMetadata(user.id, orgId, role);
 
-      state = AuthState.authenticated(
-        user: user,
-        orgId: orgId,
-        role: role,
-      );
+      state = AuthState.authenticated(user: user, orgId: orgId, role: role);
       _startTokenRefreshTimer();
     } catch (e) {
       state = AuthState.error(e.toString());
@@ -71,7 +71,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
     _tokenRefreshTimer = Timer.periodic(const Duration(minutes: 14), (_) async {
       // Mock refresh token logic. In a real app we hit the endpoint.
       // Here we just write new mock tokens.
-      await _authRepository.saveTokens('mock.access.token.new', 'mock.refresh.token.new');
+      await _authRepository.saveTokens(
+        'mock.access.token.new',
+        'mock.refresh.token.new',
+      );
     });
   }
 
@@ -82,7 +85,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 }
 
-final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
+final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>((
+  ref,
+) {
   return AuthNotifier(
     ref.watch(authRepositoryProvider),
     ref.watch(userRepositoryProvider),

@@ -15,5 +15,6 @@ abstract class UpdateTaskRequest with _$UpdateTaskRequest {
     @JsonKey(name: 'due_date') String? dueDate,
   }) = _UpdateTaskRequest;
 
-  factory UpdateTaskRequest.fromJson(Map<String, dynamic> json) => _$UpdateTaskRequestFromJson(json);
+  factory UpdateTaskRequest.fromJson(Map<String, dynamic> json) =>
+      _$UpdateTaskRequestFromJson(json);
 }

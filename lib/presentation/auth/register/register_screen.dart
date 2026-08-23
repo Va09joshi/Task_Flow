@@ -38,25 +38,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 CustomTextField(
                   labelText: 'Name',
-                  validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Required' : null,
                 ),
                 const SizedBox(height: 16),
                 CustomTextField(
                   labelText: 'Email',
                   keyboardType: TextInputType.emailAddress,
-                  validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Required' : null,
                 ),
                 const SizedBox(height: 16),
                 CustomTextField(
                   labelText: 'Password',
                   obscureText: true,
-                  validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Required' : null,
                 ),
                 const SizedBox(height: 32),
-                CustomButton(
-                  text: 'Register',
-                  onPressed: _register,
-                ),
+                CustomButton(text: 'Register', onPressed: _register),
               ],
             ),
           ),

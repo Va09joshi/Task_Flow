@@ -13,5 +13,6 @@ abstract class Comment with _$Comment {
     @JsonKey(name: 'created_at') required DateTime createdAt,
   }) = _Comment;
 
-  factory Comment.fromJson(Map<String, dynamic> json) => _$CommentFromJson(json);
+  factory Comment.fromJson(Map<String, dynamic> json) =>
+      _$CommentFromJson(json);
 }

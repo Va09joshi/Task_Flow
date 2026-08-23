@@ -11,9 +11,10 @@ final projectsProvider = FutureProvider.autoDispose<List<Project>>((ref) async {
   return repository.getProjects(orgId);
 });
 
-final projectNotifierProvider = StateNotifierProvider<ProjectNotifier, AsyncValue<void>>((ref) {
-  return ProjectNotifier(ref);
-});
+final projectNotifierProvider =
+    StateNotifierProvider<ProjectNotifier, AsyncValue<void>>((ref) {
+      return ProjectNotifier(ref);
+    });
 
 class ProjectNotifier extends StateNotifier<AsyncValue<void>> {
   final Ref _ref;

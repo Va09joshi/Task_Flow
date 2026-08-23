@@ -24,9 +24,9 @@ import 'package:taskflow/data/models/response/user_list_response.dart';
 
 class MockDataSource {
   static const _assetPath = 'assets/mock_data/TaskFlow-MockData.json';
-  
+
   bool _initialized = false;
-  
+
   // In-memory state
   List<Organization> organizations = [];
   List<User> users = [];
@@ -45,19 +45,29 @@ class MockDataSource {
 
   Future<void> init() async {
     if (_initialized) return;
-    
+
     final jsonString = await rootBundle.loadString(_assetPath);
     final data = json.decode(jsonString) as Map<String, dynamic>;
-    
-    organizations = (data['organizations'] as List).map((e) => Organization.fromJson(e)).toList();
+
+    organizations = (data['organizations'] as List)
+        .map((e) => Organization.fromJson(e))
+        .toList();
     users = (data['users'] as List).map((e) => User.fromJson(e)).toList();
-    orgMembers = (data['org_members'] as List).map((e) => OrgMember.fromJson(e)).toList();
-    projects = (data['projects'] as List).map((e) => Project.fromJson(e)).toList();
+    orgMembers = (data['org_members'] as List)
+        .map((e) => OrgMember.fromJson(e))
+        .toList();
+    projects = (data['projects'] as List)
+        .map((e) => Project.fromJson(e))
+        .toList();
     tasks = (data['tasks'] as List).map((e) => Task.fromJson(e)).toList();
-    comments = (data['comments'] as List).map((e) => Comment.fromJson(e)).toList();
-    notifications = (data['notifications'] as List).map((e) => Notification.fromJson(e)).toList();
+    comments = (data['comments'] as List)
+        .map((e) => Comment.fromJson(e))
+        .toList();
+    notifications = (data['notifications'] as List)
+        .map((e) => Notification.fromJson(e))
+        .toList();
     authMock = AuthMockData.fromJson(data['auth_mock']);
-    
+
     _initialized = true;
   }
 
@@ -68,10 +78,10 @@ class MockDataSource {
     if (offlineMode) {
       throw Exception('Network is offline');
     }
-    
+
     // Simulate realistic network latency
     await Future.delayed(const Duration(milliseconds: 500));
-    
+
     if (simulateTimeout) {
       throw Exception('Connection timeout');
     }
@@ -82,11 +92,11 @@ class MockDataSource {
   // ---------------------------------------------------------------------------
   Future<LoginResponse> login(LoginRequest request) async {
     await _simulateNetwork();
-    
+
     if (simulateValidationError) {
       throw Exception('Validation Error: Invalid request format');
     }
-    
+
     // Match against test_credentials from auth_mock
     for (final cred in authMock!.testCredentials) {
       if (cred.email == request.email && cred.password == request.password) {
@@ -94,8 +104,10 @@ class MockDataSource {
         return LoginResponse(
           accessToken: authMock!.mockLoginResponse.accessToken,
           refreshToken: authMock!.mockLoginResponse.refreshToken,
-          accessTokenExpiresInSeconds: authMock!.mockLoginResponse.accessTokenExpiresInSeconds,
-          refreshTokenExpiresInSeconds: authMock!.mockLoginResponse.refreshTokenExpiresInSeconds,
+          accessTokenExpiresInSeconds:
+              authMock!.mockLoginResponse.accessTokenExpiresInSeconds,
+          refreshTokenExpiresInSeconds:
+              authMock!.mockLoginResponse.refreshTokenExpiresInSeconds,
           user: user,
           orgId: cred.orgId,
           role: cred.role,
@@ -107,13 +119,15 @@ class MockDataSource {
 
   Future<RefreshTokenResponse> refreshToken(RefreshTokenRequest request) async {
     await _simulateNetwork();
-    
+
     // Simulate: if the provided refresh token matches, issue a new access token
     if (request.refreshToken == authMock!.mockLoginResponse.refreshToken) {
       return RefreshTokenResponse(
-        accessToken: 'mock.access.token.refreshed.${DateTime.now().millisecondsSinceEpoch}',
+        accessToken:
+            'mock.access.token.refreshed.${DateTime.now().millisecondsSinceEpoch}',
         refreshToken: authMock!.mockLoginResponse.refreshToken,
-        accessTokenExpiresInSeconds: authMock!.mockLoginResponse.accessTokenExpiresInSeconds,
+        accessTokenExpiresInSeconds:
+            authMock!.mockLoginResponse.accessTokenExpiresInSeconds,
       );
     }
     throw Exception('Invalid refresh token');
@@ -160,7 +174,7 @@ class MockDataSource {
     await _simulateNetwork();
     final index = projects.indexWhere((p) => p.id == request.id);
     if (index == -1 || simulate404) throw Exception('Project not found');
-    
+
     final existing = projects[index];
     projects[index] = existing.copyWith(
       name: request.name ?? existing.name,
@@ -183,7 +197,10 @@ class MockDataSource {
   // ---------------------------------------------------------------------------
   Future<TaskListResponse> getTasks(String orgId, {String? projectId}) async {
     await _simulateNetwork();
-    final orgProjects = projects.where((p) => p.orgId == orgId).map((p) => p.id).toSet();
+    final orgProjects = projects
+        .where((p) => p.orgId == orgId)
+        .map((p) => p.id)
+        .toSet();
     final filteredTasks = tasks.where((t) {
       if (projectId != null && t.projectId != projectId) return false;
       return orgProjects.contains(t.projectId);
@@ -225,7 +242,7 @@ class MockDataSource {
     await _simulateNetwork();
     final index = tasks.indexWhere((t) => t.id == request.id);
     if (index == -1 || simulate404) throw Exception('Task not found');
-    
+
     final existing = tasks[index];
     tasks[index] = existing.copyWith(
       title: request.title ?? existing.title,
@@ -272,7 +289,9 @@ class MockDataSource {
   // ---------------------------------------------------------------------------
   Future<NotificationListResponse> getNotifications(String userId) async {
     await _simulateNetwork();
-    final userNotifications = notifications.where((n) => n.userId == userId).toList();
+    final userNotifications = notifications
+        .where((n) => n.userId == userId)
+        .toList();
     return NotificationListResponse(
       notifications: userNotifications,
       unreadCount: userNotifications.where((n) => !n.read).length,
@@ -296,15 +315,17 @@ class MockDataSource {
 
   Future<UserListResponse> getOrgMembers(String orgId) async {
     await _simulateNetwork();
-    final memberIds = orgMembers.where((m) => m.orgId == orgId).map((m) => m.userId).toSet();
+    final memberIds = orgMembers
+        .where((m) => m.orgId == orgId)
+        .map((m) => m.userId)
+        .toSet();
     final orgUsers = users.where((u) => memberIds.contains(u.id)).toList();
-    return UserListResponse(
-      users: orgUsers,
-      totalCount: orgUsers.length,
-    );
+    return UserListResponse(users: orgUsers, totalCount: orgUsers.length);
   }
 
   Future<OrgMember?> getOrgMember(String orgId, String userId) async {
-    return orgMembers.where((m) => m.orgId == orgId && m.userId == userId).firstOrNull;
+    return orgMembers
+        .where((m) => m.orgId == orgId && m.userId == userId)
+        .firstOrNull;
   }
 }

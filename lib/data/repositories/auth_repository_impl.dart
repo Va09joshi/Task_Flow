@@ -18,17 +18,20 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this.dataSource, this.sharedPrefs, this.secureStorage);
 
   @override
-  Future<(AuthResponse, User, String role, String orgId)> login(String email, String password) async {
+  Future<(AuthResponse, User, String role, String orgId)> login(
+    String email,
+    String password,
+  ) async {
     final request = LoginRequest(email: email, password: password);
     final response = await dataSource.login(request);
-    
+
     final authResponse = AuthResponse(
       accessToken: response.accessToken,
       refreshToken: response.refreshToken,
       accessTokenExpiresInSeconds: response.accessTokenExpiresInSeconds,
       refreshTokenExpiresInSeconds: response.refreshTokenExpiresInSeconds,
     );
-    
+
     return (authResponse, response.user, response.role, response.orgId);
   }
 
@@ -60,7 +63,11 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> saveSessionMetadata(String userId, String orgId, String role) async {
+  Future<void> saveSessionMetadata(
+    String userId,
+    String orgId,
+    String role,
+  ) async {
     await sharedPrefs.setString('user_id', userId);
     await sharedPrefs.setString('org_id', orgId);
     await sharedPrefs.setString('role', role);

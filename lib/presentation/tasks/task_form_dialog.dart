@@ -29,8 +29,12 @@ class _TaskFormDialogState extends ConsumerState<TaskFormDialog> {
   @override
   void initState() {
     super.initState();
-    _titleController = TextEditingController(text: widget.taskToEdit?.title ?? '');
-    _descController = TextEditingController(text: widget.taskToEdit?.description ?? '');
+    _titleController = TextEditingController(
+      text: widget.taskToEdit?.title ?? '',
+    );
+    _descController = TextEditingController(
+      text: widget.taskToEdit?.description ?? '',
+    );
     _status = widget.taskToEdit?.status ?? TaskStatus.todo;
     _priority = widget.taskToEdit?.priority ?? TaskPriority.medium;
     _selectedAssigneeId = widget.taskToEdit?.assigneeId;
@@ -46,7 +50,7 @@ class _TaskFormDialogState extends ConsumerState<TaskFormDialog> {
   void _submit() async {
     if (_formKey.currentState!.validate()) {
       final notifier = ref.read(taskNotifierProvider.notifier);
-      
+
       if (widget.taskToEdit == null) {
         final newTask = Task(
           id: const Uuid().v4(),
@@ -56,7 +60,11 @@ class _TaskFormDialogState extends ConsumerState<TaskFormDialog> {
           status: _status,
           priority: _priority,
           assigneeId: _selectedAssigneeId,
-          dueDate: DateTime.now().add(const Duration(days: 7)).toIso8601String().split('T').first,
+          dueDate: DateTime.now()
+              .add(const Duration(days: 7))
+              .toIso8601String()
+              .split('T')
+              .first,
           createdAt: DateTime.now(),
         );
         await notifier.createTask(newTask);
@@ -81,7 +89,7 @@ class _TaskFormDialogState extends ConsumerState<TaskFormDialog> {
   Widget build(BuildContext context) {
     final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
     final membersAsync = ref.watch(orgMembersProvider);
-    
+
     return Padding(
       padding: EdgeInsets.only(
         bottom: bottomPadding,
@@ -98,30 +106,46 @@ class _TaskFormDialogState extends ConsumerState<TaskFormDialog> {
             children: [
               Text(
                 widget.taskToEdit == null ? 'Create Task' : 'Edit Task',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
               CustomTextField(
                 controller: _titleController,
                 labelText: 'Title',
-                validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                validator: (val) =>
+                    val == null || val.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 16),
               CustomTextField(
                 controller: _descController,
                 labelText: 'Description',
                 maxLines: 3,
-                validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                validator: (val) =>
+                    val == null || val.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 value: _status,
-                decoration: const InputDecoration(labelText: 'Status', filled: true),
+                decoration: const InputDecoration(
+                  labelText: 'Status',
+                  filled: true,
+                ),
                 items: const [
-                  DropdownMenuItem(value: TaskStatus.todo, child: Text('To Do')),
-                  DropdownMenuItem(value: TaskStatus.inProgress, child: Text('In Progress')),
-                  DropdownMenuItem(value: TaskStatus.review, child: Text('Review')),
+                  DropdownMenuItem(
+                    value: TaskStatus.todo,
+                    child: Text('To Do'),
+                  ),
+                  DropdownMenuItem(
+                    value: TaskStatus.inProgress,
+                    child: Text('In Progress'),
+                  ),
+                  DropdownMenuItem(
+                    value: TaskStatus.review,
+                    child: Text('Review'),
+                  ),
                   DropdownMenuItem(value: TaskStatus.done, child: Text('Done')),
                 ],
                 onChanged: (val) => setState(() => _status = val!),
@@ -138,10 +162,28 @@ class _TaskFormDialogState extends ConsumerState<TaskFormDialog> {
                             padding: const EdgeInsets.all(12.0),
                             child: CircleAvatar(
                               radius: 12,
-                              backgroundImage: members.firstWhere((m) => m.id == _selectedAssigneeId).avatarUrl.isNotEmpty
-                                  ? NetworkImage(members.firstWhere((m) => m.id == _selectedAssigneeId).avatarUrl)
+                              backgroundImage:
+                                  members
+                                      .firstWhere(
+                                        (m) => m.id == _selectedAssigneeId,
+                                      )
+                                      .avatarUrl
+                                      .isNotEmpty
+                                  ? NetworkImage(
+                                      members
+                                          .firstWhere(
+                                            (m) => m.id == _selectedAssigneeId,
+                                          )
+                                          .avatarUrl,
+                                    )
                                   : null,
-                              child: members.firstWhere((m) => m.id == _selectedAssigneeId).avatarUrl.isEmpty
+                              child:
+                                  members
+                                      .firstWhere(
+                                        (m) => m.id == _selectedAssigneeId,
+                                      )
+                                      .avatarUrl
+                                      .isEmpty
                                   ? const Icon(Icons.person, size: 16)
                                   : null,
                             ),
@@ -153,20 +195,26 @@ class _TaskFormDialogState extends ConsumerState<TaskFormDialog> {
                       value: null,
                       child: Text('Unassigned'),
                     ),
-                    ...members.map((m) => DropdownMenuItem(
-                          value: m.id,
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 12,
-                                backgroundImage: m.avatarUrl.isNotEmpty ? NetworkImage(m.avatarUrl) : null,
-                                child: m.avatarUrl.isEmpty ? const Icon(Icons.person, size: 14) : null,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(m.name),
-                            ],
-                          ),
-                        ))
+                    ...members.map(
+                      (m) => DropdownMenuItem(
+                        value: m.id,
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 12,
+                              backgroundImage: m.avatarUrl.isNotEmpty
+                                  ? NetworkImage(m.avatarUrl)
+                                  : null,
+                              child: m.avatarUrl.isEmpty
+                                  ? const Icon(Icons.person, size: 14)
+                                  : null,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(m.name),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                   onChanged: (val) => setState(() => _selectedAssigneeId = val),
                 ),
@@ -186,17 +234,32 @@ class _TaskFormDialogState extends ConsumerState<TaskFormDialog> {
                   enabled: false,
                   initialValue: 'Loading members...',
                 ),
-                error: (e, st) => const Text('Error loading members', style: TextStyle(color: Colors.red)),
+                error: (e, st) => const Text(
+                  'Error loading members',
+                  style: TextStyle(color: Colors.red),
+                ),
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 value: _priority,
-                decoration: const InputDecoration(labelText: 'Priority', filled: true),
+                decoration: const InputDecoration(
+                  labelText: 'Priority',
+                  filled: true,
+                ),
                 items: const [
                   DropdownMenuItem(value: TaskPriority.low, child: Text('Low')),
-                  DropdownMenuItem(value: TaskPriority.medium, child: Text('Medium')),
-                  DropdownMenuItem(value: TaskPriority.high, child: Text('High')),
-                  DropdownMenuItem(value: TaskPriority.urgent, child: Text('Urgent')),
+                  DropdownMenuItem(
+                    value: TaskPriority.medium,
+                    child: Text('Medium'),
+                  ),
+                  DropdownMenuItem(
+                    value: TaskPriority.high,
+                    child: Text('High'),
+                  ),
+                  DropdownMenuItem(
+                    value: TaskPriority.urgent,
+                    child: Text('Urgent'),
+                  ),
                 ],
                 onChanged: (val) => setState(() => _priority = val!),
               ),
@@ -205,16 +268,13 @@ class _TaskFormDialogState extends ConsumerState<TaskFormDialog> {
                 children: [
                   Expanded(
                     child: TextButton(
-                      onPressed: () => Navigator.pop(context), 
+                      onPressed: () => Navigator.pop(context),
                       child: const Text('Cancel'),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: CustomButton(
-                      text: 'Save',
-                      onPressed: _submit,
-                    ),
+                    child: CustomButton(text: 'Save', onPressed: _submit),
                   ),
                 ],
               ),

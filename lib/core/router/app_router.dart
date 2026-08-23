@@ -23,13 +23,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         AuthStateAuthenticated() => true,
         _ => false,
       };
-      
+
       final isSplash = state.uri.path == '/splash';
       final isLogin = state.uri.path == '/login';
       final isRegister = state.uri.path == '/register';
 
       if (isSplash) return null; // Let splash decide
-      
+
       if (!isAuth && !isLogin && !isRegister) {
         return '/login';
       }
@@ -45,18 +45,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/splash',
         builder: (context, state) => const SplashScreen(),
       ),
-      GoRoute(
-        path: '/login',
-        builder: (context, state) => const LoginScreen(),
-      ),
+      GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
       GoRoute(
         path: '/register',
         builder: (context, state) => const RegisterScreen(),
       ),
-      GoRoute(
-        path: '/home',
-        builder: (context, state) => const HomeScreen(),
-      ),
+      GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
 
       GoRoute(
         path: '/projects',

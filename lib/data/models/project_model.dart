@@ -15,5 +15,6 @@ abstract class Project with _$Project {
     @JsonKey(name: 'created_at') required DateTime createdAt,
   }) = _Project;
 
-  factory Project.fromJson(Map<String, dynamic> json) => _$ProjectFromJson(json);
+  factory Project.fromJson(Map<String, dynamic> json) =>
+      _$ProjectFromJson(json);
 }
