@@ -51,30 +51,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  Future<void> _promptBiometricsAndGoHome() async {
-    final LocalAuthentication auth = LocalAuthentication();
-    try {
-      final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
-      final bool canAuthenticate =
-          canAuthenticateWithBiometrics || await auth.isDeviceSupported();
-      if (canAuthenticate) {
-        final bool didAuthenticate = await auth.authenticate(
-          localizedReason: 'Would you like to enable biometrics for TaskFlow?',
-          persistAcrossBackgrounding: true,
-          biometricOnly: false,
-        );
-        if (didAuthenticate && mounted) {
-          ToastService.showSuccess(context, 'Biometrics authenticated!');
-        }
-      }
-    } catch (e) {
-      debugPrint('Biometrics Error: $e');
-    }
-    if (mounted) {
-      context.go('/home');
-    }
-  }
-
   @override
   void dispose() {
     _emailController.dispose();
@@ -89,7 +65,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ref.listen(authNotifierProvider, (previous, next) {
       switch (next) {
         case AuthStateAuthenticated():
-          _promptBiometricsAndGoHome();
+          context.go('/home');
           break;
         case AuthStateError(message: final msg):
           ToastService.showError(context, msg);

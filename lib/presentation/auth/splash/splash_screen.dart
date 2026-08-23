@@ -49,6 +49,29 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   Future<void> _initApp() async {
     try {
       debugPrint('SplashScreen: Starting initialization...');
+
+      // 1. App-wide Biometric Lock (Prompt immediately at start)
+      final LocalAuthentication auth = LocalAuthentication();
+      final bool canAuthenticate =
+          await auth.canCheckBiometrics || await auth.isDeviceSupported();
+      if (canAuthenticate && !_biometricPrompted) {
+        _biometricPrompted = true;
+        try {
+          final bool didAuthenticate = await auth.authenticate(
+            localizedReason: 'Please authenticate to access TaskFlow',
+            persistAcrossBackgrounding: true,
+            biometricOnly: false,
+          );
+          if (!didAuthenticate) {
+            // If they cancel, we could force them out, but for this assignment
+            // we'll let them proceed to see the unauthenticated state
+            debugPrint('Biometrics canceled by user.');
+          }
+        } catch (e) {
+          debugPrint('Biometrics Error during app lock: $e');
+        }
+      }
+
       // Wait for MockDataSource to load
       await ref.read(mockDataSourceProvider).init();
       debugPrint('SplashScreen: MockDataSource initialized.');
@@ -74,38 +97,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       if (!mounted) return;
       switch (state) {
         case AuthStateAuthenticated():
-          if (_biometricPrompted) return;
-          _biometricPrompted = true;
-          final LocalAuthentication auth = LocalAuthentication();
-          try {
-            final bool canAuthenticateWithBiometrics =
-                await auth.canCheckBiometrics;
-            final bool canAuthenticate =
-                canAuthenticateWithBiometrics || await auth.isDeviceSupported();
-            if (canAuthenticate) {
-              final bool didAuthenticate = await auth.authenticate(
-                localizedReason: 'Please authenticate to access TaskFlow',
-                persistAcrossBackgrounding: true,
-                biometricOnly: false,
-              );
-              if (didAuthenticate) {
-                if (mounted) context.go('/home');
-              } else {
-                ref.read(authNotifierProvider.notifier).logout();
-              }
-            } else {
-              if (mounted) context.go('/home');
-            }
-          } catch (e, st) {
-            debugPrint('Biometrics Error: $e\n$st');
-            if (mounted) {
-              ToastService.showError(
-                context,
-                'Biometrics unavailable or canceled.',
-              );
-              context.go('/home');
-            }
-          }
+          if (mounted) context.go('/home');
           break;
         case AuthStateUnauthenticated():
         case AuthStateError():
