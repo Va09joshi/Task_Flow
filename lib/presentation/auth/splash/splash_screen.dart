@@ -85,11 +85,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             if (canAuthenticate) {
               final bool didAuthenticate = await auth.authenticate(
                 localizedReason: 'Please authenticate to access TaskFlow',
-                options: const AuthenticationOptions(
-                  useErrorDialogs: true,
-                  stickyAuth: true,
-                  biometricOnly: false,
-                ),
+                useErrorDialogs: true,
+                stickyAuth: true,
+                biometricOnly: false,
               );
               if (didAuthenticate) {
                 if (mounted) context.go('/home');
