@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:taskflow/presentation/auth/auth_notifier.dart';
 import 'package:taskflow/core/providers.dart';
+import 'package:taskflow/core/theme/app_text_styles.dart';
 
 import 'package:local_auth/local_auth.dart';
 import '../auth_state.dart';
@@ -128,10 +129,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   padding: const EdgeInsets.all(24.0),
                   child: Text(
                     'Error: $_errorMsg\n\nPlease restart the app.',
-                    style: const TextStyle(
-                      color: Colors.redAccent,
-                      fontSize: 16,
-                    ),
+                    style: AppTextStyles.errorText,
                     textAlign: TextAlign.center,
                   ),
                 )
@@ -157,21 +155,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                         const SizedBox(height: 32),
                         const Text(
                           'TaskFlow',
-                          style: TextStyle(
-                            fontSize: 42,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF450C3F),
-                            letterSpacing: 2.0,
-                          ),
+                          style: AppTextStyles.splashHeadline,
                         ),
                         const SizedBox(height: 12),
                         const Text(
                           'Manage your work seamlessly',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black54,
-                            letterSpacing: 1.2,
-                          ),
+                          style: AppTextStyles.splashSubtitle,
                         ),
                         const SizedBox(height: 64),
                         const CircularProgressIndicator(
