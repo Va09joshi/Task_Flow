@@ -8,6 +8,7 @@ import 'package:taskflow/presentation/widgets/custom_text_field.dart';
 import 'package:taskflow/presentation/widgets/custom_button.dart';
 import 'package:taskflow/presentation/widgets/custom_app_bar.dart';
 import 'package:taskflow/core/utils/toast_service.dart';
+import 'package:local_auth/local_auth.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -50,6 +51,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  Future<void> _promptBiometricsAndGoHome() async {
+    final LocalAuthentication auth = LocalAuthentication();
+    try {
+      final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
+      final bool canAuthenticate =
+          canAuthenticateWithBiometrics || await auth.isDeviceSupported();
+      if (canAuthenticate) {
+        final bool didAuthenticate = await auth.authenticate(
+          localizedReason: 'Would you like to enable biometrics for TaskFlow?',
+          persistAcrossBackgrounding: true,
+          biometricOnly: false,
+        );
+        if (didAuthenticate && mounted) {
+          ToastService.showSuccess(context, 'Biometrics authenticated!');
+        }
+      }
+    } catch (e) {
+      debugPrint('Biometrics Error: $e');
+    }
+    if (mounted) {
+      context.go('/home');
+    }
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -64,7 +89,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ref.listen(authNotifierProvider, (previous, next) {
       switch (next) {
         case AuthStateAuthenticated():
-          context.go('/home');
+          _promptBiometricsAndGoHome();
           break;
         case AuthStateError(message: final msg):
           ToastService.showError(context, msg);
